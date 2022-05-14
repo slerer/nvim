@@ -55,35 +55,55 @@ return packer.startup(function(use)
   use "tamago324/lir.nvim"
   -- use "kosayoda/nvim-lightbulb"
   use "akinsho/bufferline.nvim"
-  -- use "moll/vim-bbye"
+  use "moll/vim-bbye"
   use "nvim-lualine/lualine.nvim"
   use "akinsho/toggleterm.nvim"
   use "ahmedkhalf/project.nvim"
   use "lewis6991/impatient.nvim"
   use "lukas-reineke/indent-blankline.nvim"
   use "goolord/alpha-nvim"
-  -- use "antoinemadec/FixCursorHold.nvim" -- This is needed to fix lsp doc highlight
+  use "antoinemadec/FixCursorHold.nvim" -- This is needed to fix lsp doc highlight
   use "folke/which-key.nvim"
   use "unblevable/quick-scope"
   use "phaazon/hop.nvim"
   use "andymass/vim-matchup"
-  -- use "nacro90/numb.nvim"
-  -- use "monaqa/dial.nvim"
-  -- use "norcalli/nvim-colorizer.lua"
-  -- use "windwp/nvim-spectre"
+  use "nacro90/numb.nvim"
+  use "monaqa/dial.nvim"
+  use "norcalli/nvim-colorizer.lua"
+  use "windwp/nvim-spectre"
   use "folke/zen-mode.nvim"
-  use "karb94/neoscroll.nvim"
+  -- use "karb94/neoscroll.nvim"
   use "folke/todo-comments.nvim"
-  use "kevinhwang91/nvim-bqf"
+
+  -- nvim-bqf for better quickfix window.
+  use { "kevinhwang91/nvim-bqf", ft = "qf" }
+  -- optional -- fzf fun:
+  -- "Old-way"
+  use {'junegunn/fzf', run = function()
+      vim.fn['fzf#install']()
+  end
+  }
+  use "junegunn/fzf.vim"
+
+  -- "New-way"
+  use "vijaymarupudi/nvim-fzf"
+  -- use "vijaymarupudi/nvim-fzf-commands" -- timed-out, should retry?
+  use { 'ibhagwan/fzf-lua',
+    -- optional for icon support
+    requires = { 'kyazdani42/nvim-web-devicons' }
+  }
+  -- need to decide what to use ^^^
+  -- end of fzf fun --
+
   use "ThePrimeagen/harpoon"
   use "MattesGroeger/vim-bookmarks"
-  use "Mephistophiles/surround.nvim"
+  -- use "Mephistophiles/surround.nvim"
   use "tpope/vim-repeat"
   use "rcarriga/nvim-notify"
   use "tversteeg/registers.nvim"
   use { "nyngwang/NeoZoom.lua", branch = "neo-zoom-original" }
-  use "SmiteshP/nvim-gps"
-  -- use { "michaelb/sniprun", run = "bash ./install.sh" }
+	use { "SmiteshP/nvim-gps", requires = "nvim-treesitter/nvim-treesitter" }
+  use { "michaelb/sniprun", run = "bash ./install.sh" }
   -- use {
   --
   --   "iamcco/markdown-preview.nvim",
@@ -113,6 +133,7 @@ return packer.startup(function(use)
   use "hrsh7th/cmp-nvim-lsp"
   use "hrsh7th/cmp-emoji"
   use "hrsh7th/cmp-nvim-lua"
+  use "f3fora/cmp-spell"
 
   -- snippets
   use "L3MON4D3/LuaSnip" --snippet engine
@@ -124,8 +145,10 @@ return packer.startup(function(use)
   use "williamboman/nvim-lsp-installer" -- simple to use language server installer
   use "tamago324/nlsp-settings.nvim" -- language server settings defined in json for
   use "jose-elias-alvarez/null-ls.nvim" -- for formatters and linters
-  use "filipdutescu/renamer.nvim"
+  -- need to decide between next two plugins:
   use "simrat39/symbols-outline.nvim"
+  use "stevearc/aerial.nvim"
+  --
   use "ray-x/lsp_signature.nvim"
   use "b0o/SchemaStore.nvim"
   use { "folke/trouble.nvim", cmd = "TroubleToggle", }
@@ -137,11 +160,24 @@ return packer.startup(function(use)
 
   -- Telescope
   use "nvim-telescope/telescope.nvim"
+  use "jvgrootveld/telescope-zoxide"
+  use "nvim-telescope/telescope-symbols.nvim"
+  use "nvim-telescope/telescope-dap.nvim"
+  use { 'nvim-telescope/telescope-live-grep-raw.nvim' }
   use "tom-anders/telescope-vim-bookmarks.nvim"
   use "nvim-telescope/telescope-media-files.nvim"
   use "nvim-telescope/telescope-ui-select.nvim"
   use "nvim-telescope/telescope-file-browser.nvim"
-  use "nvim-telescope/telescope-fzy-native.nvim"  -- TODO: Add this to Telescope setup
+  -- use "nvim-telescope/telescope-fzy-native.nvim"
+  use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+  use "nvim-telescope/telescope-project.nvim"
+  use {
+    "nvim-telescope/telescope-frecency.nvim",
+    config = function()
+      require"telescope".load_extension("frecency")
+    end,
+    requires = {"tami5/sqlite.lua"}
+  }
 
   -- Treesitter
   use { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate", }
@@ -151,15 +187,15 @@ return packer.startup(function(use)
   use "nvim-treesitter/playground"
   use "windwp/nvim-ts-autotag"
   use "romgrk/nvim-treesitter-context"
-  use "mizlan/iswap.nvim"
+  use "mizlan/iswap.nvim" -- Allows for swapping items etc. (:ISwap, :ISwapWith)
 
   -- Git
   use "lewis6991/gitsigns.nvim"
   use "f-person/git-blame.nvim"
-  use "ruifm/gitlinker.nvim"
+  use { "ruifm/gitlinker.nvim", requires = "nvim-lua/plenary.nvim" }
   use "mattn/vim-gist"
   use "mattn/webapi-vim"
-  use "https://github.com/rhysd/conflict-marker.vim"
+  use "https://github.com/rhysd/conflict-marker.vim" -- UI Component Library for Neovim.
 
   -- DAP
   use "mfussenegger/nvim-dap"
@@ -167,7 +203,38 @@ return packer.startup(function(use)
   use "rcarriga/nvim-dap-ui"
   use "Pocco81/DAPInstall.nvim"
 
+  -- General QoL Plugins I'm testing:
+  use "ron89/thesaurus_query.vim"
+  use "AndrewRadev/splitjoin.vim"
+  -- https://github.com/AndrewRadev/sideways.vim
+  use "AndrewRadev/sideways.vim"
+  use "t9md/vim-choosewin"
+  use "nathom/filetype.nvim"
+  -- use {
+  --   "nathom/filetype.nvim",
+  --   config = function()
+  --     require("filetype").setup()
+  --   end,
+  -- }
+  use {
+    'rmagatti/auto-session',
+    config = function()
+      require('auto-session').setup {
+        log_level = 'info',
+        auto_session_suppress_dirs = {'~/', '~/git/'}
+      }
+    end
+  }
+  use {
+    'rmagatti/session-lens',
+    requires = {'rmagatti/auto-session', 'nvim-telescope/telescope.nvim'},
+    config = function()
+      require('session-lens').setup({--[[your custom config--]]})
+    end
+  }
+
   -- OLD plugins here:
+  use "AndrewRadev/linediff.vim"
   use "vim-scripts/kwbdi.vim"
   use "machakann/vim-sandwich"
   -- use "tpope/vim-commentary"
@@ -181,11 +248,11 @@ return packer.startup(function(use)
   -- use "kosayoda/nvim-lightbulb"
   use "tpope/vim-fugitive"
   use "junegunn/gv.vim"
-  use "borissov/fugitive-bitbucketserver"
+  -- use "borissov/fugitive-bitbucketserver"
   -- use "kassio/neoterm"
   use "kevinhwang91/nvim-hlslens" -- Better searching highlighting.
   use "vim-scripts/IndexedSearch" -- Adds 'Match XX of YY' in status-line when searching.
-  use "MunifTanjim/nui.nvim"
+  use "MunifTanjim/nui.nvim" -- UI Component Library for Neovim.
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins

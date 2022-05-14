@@ -74,5 +74,5 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, {
 
 -- Set/unset relative number when entering/exiting a buffer.
 local group = vim.api.nvim_create_augroup("numbertoggle", { clear = true })
-vim.api.nvim_create_autocmd("BufEnter,FocusGained", { command = "set relativenumber", group = group })
-vim.api.nvim_create_autocmd("BufLeave,FocusLost", { command = "set norelativenumber", group = group })
+vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "FocusGained" }, { command = "set relativenumber", group = group })
+vim.api.nvim_create_autocmd({ "BufLeave", "InsertEnter", "FocusLost" }, { command = "set norelativenumber", group = group })

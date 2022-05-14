@@ -4,7 +4,6 @@ if not status_ok then
 end
 
 local actions = require "telescope.actions"
-telescope.load_extension "media_files"
 local icons = require("user.icons")
 
 telescope.setup {
@@ -34,16 +33,18 @@ telescope.setup {
 
         ['<c-d>'] = require('telescope.actions').delete_buffer,
 
-        -- ["<C-u>"] = actions.preview_scrolling_up,
-        -- ["<C-d>"] = actions.preview_scrolling_down,
+        ["<C-u>"] = actions.preview_scrolling_up,
+        ["<C-d>"] = actions.preview_scrolling_down,
 
         ["<PageUp>"] = actions.results_scrolling_up,
         ["<PageDown>"] = actions.results_scrolling_down,
 
         ["<Tab>"] = actions.toggle_selection + actions.move_selection_worse,
         ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_better,
-        ["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
-        ["<M-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
+        ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
+        -- commented out till I find a fix for sending Meta-Key correctly...
+        -- ["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
+        -- ["<M-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
         ["<C-l>"] = actions.complete_tag,
         ["<C-_>"] = actions.which_key, -- keys from pressing <C-/>
       },
@@ -57,8 +58,10 @@ telescope.setup {
 
         ["<Tab>"] = actions.toggle_selection + actions.move_selection_worse,
         ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_better,
-        ["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
-        ["<M-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
+        ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
+        -- commented out till I find a fix for sending Meta-Key correctly...
+        -- ["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
+        -- ["<M-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
 
         ["j"] = actions.move_selection_next,
         ["k"] = actions.move_selection_previous,
@@ -81,6 +84,7 @@ telescope.setup {
       },
     },
   },
+  -- TODO: (slerer) read about Telescope pickers (:h telescope-file-browser.picker)
   pickers = {
     -- Default configuration for builtin pickers goes here:
     -- picker_name = {
@@ -89,8 +93,35 @@ telescope.setup {
     -- }
     -- Now the picker_config_key will be applied every time you call this
     -- builtin picker
+
+    -- the following limits the live_grep builtin picker to search in same extension files.
+    live_grep = {
+      additional_args = function(opts)
+        if opts.search_all == true then
+          return {}
+        end
+        local args_for_ext = {
+          ["py"]  = "-tpy",
+          ["cs"]  = "-tcs",
+          ["cpp"] = "-tcpp",
+          ["c"]   = "-tcpp",
+          ["h"]   = "-tcpp",
+          ["rs"]  = "-trust",
+          ["lua"] = "-tlua"
+        }
+        return { args_for_ext[vim.bo.filetype] }
+      end
+    },
   },
   extensions = {
+    -- https://github.com/nvim-telescope/telescope-fzf-native.nvim
+    fzf = {
+      fuzzy = true,                    -- false will only do exact matching
+      override_generic_sorter = true,  -- override the generic sorter
+      override_file_sorter = true,     -- override the file sorter
+      case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
+                                       -- the default case_mode is "smart_case"
+    },
     media_files = {
       -- filetypes whitelist
       -- defaults to {"png", "jpg", "mp4", "webm", "pdf"}
@@ -114,12 +145,52 @@ telescope.setup {
     },
     -- ["ui-select"] = {
     --   require("telescope.themes").get_dropdown {
-    --     previewer = false,
+    --     -- previewer = false,
     --     -- even more opts
     --   },
     -- },
   },
 }
 
--- telescope.load_extension "ui-select"
+telescope.load_extension "ui-select"
+
+--
+telescope.load_extension('vim_bookmarks')
+
+--
+telescope.load_extension("session-lens")
+
+-- https://github.com/jvgrootveld/telescope-zoxide
+telescope.load_extension('zoxide')
+
+-- https://github.com/nvim-telescope/telescope-file-browser.nvim
 telescope.load_extension "file_browser"
+
+telescope.load_extension "media_files"
+
+telescope.load_extension "fzf"
+
+-- https://github.com/nvim-telescope/telescope-frecency.nvim
+telescope.load_extension "frecency"
+
+-- https://github.com/nvim-telescope/telescope-project.nvim
+telescope.load_extension "project"
+-- lua require'telescope'.extensions.project.project{} to activate picker
+
+-- https://github.com/nvim-telescope/telescope-rg.nvim
+telescope.load_extension "live_grep_raw" 
+
+-- https://github.com/nvim-telescope/telescope-dap.nvim
+telescope.load_extension('dap')
+-- Available commands:
+-- :Telescope dap commands
+-- :Telescope dap configurations
+-- :Telescope dap list_breakpoints
+-- :Telescope dap variables
+-- :Telescope dap frames
+-- As functions:
+-- require'telescope'.extensions.dap.commands{}
+-- require'telescope'.extensions.dap.configurations{}
+-- require'telescope'.extensions.dap.list_breakpoints{}
+-- require'telescope'.extensions.dap.variables{}
+-- require'telescope'.extensions.dap.frames{}

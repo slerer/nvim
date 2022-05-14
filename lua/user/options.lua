@@ -1,3 +1,5 @@
+local opt = vim.opt
+
 local options = {
   backup = false,                          -- creates a backup file
   swapfile = false,                        -- creates a swapfile
@@ -13,9 +15,10 @@ local options = {
   guifont = "Menlo:h18",                   -- the font used in graphical neovim applications
   termguicolors = true,                    -- set term gui colors (most terminals support this)
   colorcolumn = "120",
+  textwidth = 120,
   scrolloff = 8,                           -- is one of my fav
-  sidescroll = 1,                          -- brings characters in view when side scrolling.
-  sidescrolloff = 8,                       -- start side-scrolling when n chars are left. Old config value was 26
+  sidescroll = 3,                          -- brings characters in view when side scrolling.
+  sidescrolloff = 999,                       -- start side-scrolling when n chars are left. Old config value was 26
   pumheight = 10,                          -- pop up menu height
   showmode = false,                        -- we don't need to see things like -- INSERT -- anymore
   showtabline = 2,                         -- always show tabs
@@ -35,7 +38,8 @@ local options = {
   smartindent = true,                      -- make indenting smarter again
   splitbelow = true,                       -- force all horizontal splits to go below current window
   splitright = true,                       -- force all vertical splits to go to the right of current window
-  timeoutlen = 750,                        -- time to wait for a mapped sequence to complete (in milliseconds - was 100)
+  -- timeoutlen = 750,                        -- time to wait for a mapped sequence to complete (in milliseconds - was 100)
+  timeoutlen = 250,                        -- time to wait for a mapped sequence to complete (in milliseconds - was 100)
   ttimeoutlen = 150,
   updatetime = 300,                        -- faster completion (4000ms default)
   expandtab = true,                        -- convert tabs to spaces
@@ -51,28 +55,46 @@ local options = {
   pastetoggle = "<F2>",
 
 }
-vim.g.python3_host_prog = "/Users/slerer/opt/anaconda3/envs/neovim/bin/python3"
 
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-vim.opt.fillchars.eob=" "
+for k, v in pairs(options) do
+  opt[k] = v
+end
+
+-- Ignore compiled files
+opt.wildignore = "__pycache__"
+opt.wildignore = opt.wildignore + { "*.o", "*~", "*.pyc", "*pycache*" }
+
+-- -- Cool floating window popup menu for completion on command line
+-- opt.pumblend = 17
+-- opt.wildmode = "longest:full"
+-- opt.wildoptions = "pum"
+
+opt.fillchars.eob=" "
 
 -- new method using lua API:
-vim.opt.shortmess:append "c"
--- executing via vim.cmd:
+opt.shortmess:append "c"
+-- executing via vim.cmd, because we still don't have the lua API (AFAIK):
 vim.cmd [[set formatoptions-=t]] -- do not format just about any type of text, esp. source code
 vim.cmd [[set formatoptions+=n]] -- recognize numbered lists when formatting
 vim.cmd [[set formatoptions+=1]] -- don't break a line after a one-letter word
-
-for k, v in pairs(options) do
-  vim.opt[k] = v
-end
 
 vim.cmd "set whichwrap+=<,>,[,],h,l"
 vim.cmd "set nojoinspaces" -- prevents two spaces after punctuation on join
 vim.cmd "set nofsync" -- allows OS to decide when to flush to disk
 vim.cmd [[ set listchars=tab:▸\ ,trail:·,extends:❯,precedes:❮,nbsp:· ]]
 vim.cmd [[set iskeyword+=-]]
+
+-- Globals (let g: in vimscript):
+vim.g.python3_host_prog = "/Users/slerer/opt/anaconda3/envs/neovim/bin/python3"
+
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+vim.g.tq_map_keys = 1
+vim.g.tq_enabled_backends={"datamuse_com", "mthesaur_txt", "openoffice_en"}
+
+-- if you want to use overlay feature
+vim.g.choosewin_overlay_enable = 1
 
 -- Adding the next two in case I'll reinstall FZF
 if vim.fn.executable('rg') == 1 then
@@ -90,3 +112,7 @@ vim.g.undotree_WindowLayout = 2
 vim.g.vista_fzf_preview = 'right:50%'
 vim.g.vista_echo_cursor_strategy = 'both'
 vim.g.vista_sidebar_width = 40
+
+-- in millisecond, used for both CursorHold and CursorHoldI,
+-- use updatetime instead if not defined
+vim.g.cursorhold_updatetime = 100

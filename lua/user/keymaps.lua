@@ -1,4 +1,5 @@
 local opts = { noremap = true, silent = true }
+local opts_nowait = { noremap = true, silent = true, nowait = true }
 
 local term_opts = { silent = true }
 
@@ -22,20 +23,20 @@ vim.g.maplocalleader = ","
 -- Remap j and k to act as expected when used on long, wrapped, lines
 keymap("n", "j", "gj", opts)
 keymap("n", "k", "gk", opts)
--- remap :W to :w, and :Q to :q. Yeah, I'm lazy.
-keymap("n", ":W", ":w", opts)
-keymap("n", ":Q", ":q", opts)
-keymap("n", ":X", ":x", opts)
--- More of the same:
-keymap("n", ":Bl", ":bl", opts)
-keymap("n", ":Bp", ":bp", opts)
-keymap("n", ":Bn", ":bn", opts)
-keymap("n", ":Bd", ":bd", opts)
-keymap("n", ":Vs", ":vs", opts)
-keymap("n", ":Bs", ":bs", opts)
-keymap("n", ":Cn", ":cn", opts)
-keymap("n", ":Cp", ":cp", opts)
-keymap("n", ":B", ":b", opts)
+-- -- remap :W to :w, and :Q to :q. Yeah, I'm lazy.
+-- keymap("n", ":W", ":w", opts)
+-- keymap("n", ":Q", ":q", opts)
+-- keymap("n", ":X", ":x", opts)
+-- -- More of the same:
+-- keymap("n", ":Bl", ":bl", opts)
+-- keymap("n", ":Bp", ":bp", opts)
+-- keymap("n", ":Bn", ":bn", opts)
+-- keymap("n", ":Bd", ":bd", opts)
+-- keymap("n", ":Vs", ":vs", opts)
+-- keymap("n", ":Bs", ":bs", opts)
+-- keymap("n", ":Cn", ":cn", opts)
+-- keymap("n", ":Cp", ":cp", opts)
+-- keymap("n", ":B", ":b", opts)
 
 keymap("n", "<leader>xx", "<cmd>LspTroubleDocumentToggle<cr>", opts)
 -- Better window navigation
@@ -73,16 +74,20 @@ keymap("v", "<", "<gv", opts)
 keymap("v", ">", ">gv", opts)
 
 -- Move text up and down
-keymap("v", "<A-j>", ":m .+1<CR>==", opts)
-keymap("v", "<A-k>", ":m .-2<CR>==", opts)
+keymap("v", "J", ":move '>+1<CR>gv-gv", opts)
+keymap("v", "K", ":move '<-2<CR>gv-gv", opts)
+-- keymap("v", "<A-j>", ":m .+1<CR>==", opts)
+-- keymap("v", "<A-k>", ":m .-2<CR>==", opts)
+
+-- pasting without overwriting "register 
 -- keymap("v", "p", '"_dP', opts)
 
 -- Visual Block --
 -- Move text up and down
 keymap("x", "J", ":move '>+1<CR>gv-gv", opts)
 keymap("x", "K", ":move '<-2<CR>gv-gv", opts)
-keymap("x", "<A-j>", ":move '>+1<CR>gv-gv", opts)
-keymap("x", "<A-k>", ":move '<-2<CR>gv-gv", opts)
+-- keymap("x", "<A-j>", ":move '>+1<CR>gv-gv", opts)
+-- keymap("x", "<A-k>", ":move '<-2<CR>gv-gv", opts)
 
 -- Terminal --
 -- Better terminal navigation
@@ -96,10 +101,10 @@ keymap("t", "<C-o>", "<C-\\><C-N>", term_opts)
 keymap("n", "<esc><esc>", "<cmd>nohlsearch<cr>", opts)
 keymap("n", "<leader>l", "<cmd>nohlsearch<cr>", opts)
 -- NOTE: the fact that tab and ctrl-i are the same is stupid
--- keymap("n", "<TAB>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
-keymap("n", "Q", "<cmd>Bdelete!<CR>", opts)
 -- keymap("n", "<leader>bd", "<cmd>Bdelete!<CR>", opts)
-keymap("n", "<F1>", ":e ~/Notes/<cr>", opts)
+-- keymap("n", "<leader>bd", "<cmd>Bwipeout<CR>", opts)
+keymap("n", "<leader>bd", "<Plug>Kwbd<CR>", opts)
+keymap("n", "<F1>", ":e ~/.my_notes/<cr>", opts)
 -- keymap("n", "<F3>", ":e .<cr>", opts)
 keymap("n", "<F4>", ":UndotreeToggle<cr>", opts)
 -- keymap("n", "<F4>", "<cmd>Telescope resume<cr>", opts)
@@ -122,23 +127,27 @@ keymap(
   "<cmd>lua require('telescope.builtin').find_files(require('telescope.themes').get_dropdown{previewer = false})<cr>",
   opts
 )
+keymap("n", "<leader><leader>", "<Cmd>lua require('telescope').extensions.frecency.frecency()<CR>", opts)
 keymap("n", "<C-t>", "<cmd>lua vim.lsp.buf.document_symbol()<cr>", opts)
 -- keymap("n", "<C-z>", "<cmd>ZenMode<cr>", opts)
-keymap("n", "<c-n>", ":e ~/Notes/<cr>", opts)
+keymap("n", "<c-n>", ":e ~/.my_notes/<cr>", opts)
 
 keymap("n", "-", ":lua require'lir.float'.toggle()<cr>", opts)
-keymap("n", "gx", [[:silent execute '!$BROWSER ' . shellescape(expand('<cfile>'), 1)<CR>]], opts)
+-- keymap("n", "gx", [[:silent execute '!$BROWSER ' . shellescape(expand('<cfile>'), 1)<CR>]], opts)
 -- Change '<CR>' to whatever shortcut you like :)
-vim.api.nvim_set_keymap("n", "<CR>", ":up<CR>", { noremap = true, silent = true, nowait = true })
-vim.api.nvim_set_keymap("n", "<C-w>z", "<cmd>NeoZoomToggle<CR>", { noremap = true, silent = true, nowait = true })
-vim.api.nvim_set_keymap(
-  "n",
-  "=",
-  "<cmd>JABSOpen<cr>",
-  { noremap = true, silent = true, nowait = true }
-)
+vim.api.nvim_set_keymap("n", "<CR>", ":up|noh<CR>", opts_nowait)
+vim.api.nvim_set_keymap("n", "<C-w>z", "<cmd>NeoZoomToggle<CR>", opts_nowait)
+vim.api.nvim_set_keymap("n", "=", "<Plug>(choosewin)", opts)
+-- vim.api.nvim_set_keymap(
+--   "n",
+--   "=",
+--   "<cmd>JABSOpen<cr>",
+--   { noremap = true, silent = true, nowait = true }
+-- )
 
 vim.api.nvim_set_keymap("n", "<leader>json", ":%!python -m json.tool<CR>", opts) -- Formatting a JSON file
 vim.api.nvim_set_keymap("n", "<C-j>", "i<CR><ESC>", opts) -- Formatting a JSON file
 vim.api.nvim_set_keymap("n", "<leader>spell", ":set spell!<CR>", opts)
 vim.api.nvim_set_keymap("n", "<leader>wrap", ":set wrap!<CR>", opts)
+vim.api.nvim_set_keymap("n",  "<C-h>", "<cmd>SidewaysLeft<CR>", opts)
+vim.api.nvim_set_keymap("n",  "<C-l>", "<cmd>SidewaysRight<CR>", opts)
