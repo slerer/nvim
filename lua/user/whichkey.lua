@@ -20,7 +20,7 @@ local setup = {
       windows = true, -- default bindings on <c-w>
       nav = true, -- misc bindings to work with windows
       z = true, -- bindings for folds, spelling and others prefixed with z
-      g = true, -- bindings for prefixed with g
+      -- g = true, -- bindings for prefixed with g
     },
   },
   -- add operators that will trigger motion and text object completion
@@ -105,43 +105,23 @@ local mappings = {
   --   "Buffers",
   -- },
   ["e"] = { "<cmd>NvimTreeToggle<cr>", "Explorer" },
-  ["h"] = { "<cmd>HopWord<CR>", "Hop fFtT" },
-  ["/"] = { "<cmd>HopChar2<CR>", "Hop 2Char /" },
-  -- ["/"] = { '<cmd>lua require("Comment.api").toggle_current_linewise()<CR>', "Comment" },
-
-  -- :lua require'lir.float'.toggle()
-  -- ["f"] = {
-  --   "<cmd>lua require('telescope.builtin').find_files(require('telescope.themes').get_dropdown{previewer = false})<cr>",
-  --   "Find files",
-  -- },
-  -- ["F"] = { "<cmd>Telescope live_grep theme=ivy<cr>", "Find Text" },
+  -- ["h"] = { "<cmd>HopWord<CR>", "Hop word" },
+  -- ["/"] = { "<cmd>HopPattern<CR>", "Hop /" },
+  -- Trying the multi-window variants that were introduced lately:
+  ["h"] = { "<cmd>HopWordMW<CR>", "Hop word" },
+  ["/"] = { "<cmd>HopPatternMW<CR>", "Hop /" },
   ["P"] = { "<cmd>lua require('telescope').extensions.projects.projects()<cr>", "Projects" },
-  -- ["R"] = { '<cmd>lua require("renamer").rename()<cr>', "Rename" },
   ["z"] = { "<cmd>ZenMode<cr>", "Zen" },
   ["gy"] = "Link",
 
-  p = {
-    name = "Packer",
-    c = { "<cmd>PackerCompile<cr>", "Compile" },
-    i = { "<cmd>PackerInstall<cr>", "Install" },
-    s = { "<cmd>PackerSync<cr>", "Sync" },
-    S = { "<cmd>PackerStatus<cr>", "Status" },
-    u = { "<cmd>PackerUpdate<cr>", "Update" },
-  },
-
-  o = {
-    name = "Options",
-    w = { '<cmd>lua require("user.functions").toggle_option("wrap")<cr>', "Wrap" },
-    r = { '<cmd>lua require("user.functions").toggle_option("relativenumber")<cr>', "Relative" },
-    l = { '<cmd>lua require("user.functions").toggle_option("cursorline")<cr>', "Relative" },
-    s = { '<cmd>lua require("user.functions").toggle_option("spell")<cr>', "Relative" },
-  },
-
-  r = {
-    name = "Replace",
-    r = { "<cmd>lua require('spectre').open()<cr>", "Replace" },
-    w = { "<cmd>lua require('spectre').open_visual({select_word=true})<cr>", "Replace Word" },
-    f = { "<cmd>lua require('spectre').open_file_search()<cr>", "Replace Buffer" },
+-- keymap("n", "<leader>bd", "<cmd>Bdelete!<CR>", opts)
+-- keymap("n", "<leader>bd", "<cmd>Bwipeout<CR>", opts)
+-- keymap("n", "<leader>bd", "<Plug>Kwbd<CR>", opts)
+  b = {
+    name = "Buffers",
+    -- d = { "<cmd>Bdelete!<CR>", "Delete buffer" },
+    d = { "<cmd>Bwipeout<CR>", "Delete buffer" },
+    f = { "<cmd>Telescope buffers theme=ivy<cr>", "Buffers" },
   },
 
   d = {
@@ -156,7 +136,6 @@ local mappings = {
     u = { "<cmd>lua require'dapui'.toggle()<cr>", "UI" },
     x = { "<cmd>lua require'dap'.terminate()<cr>", "Exit" },
   },
-
   -- nnoremap <silent> <leader>B :lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>
   -- nnoremap <silent> <leader>lp :lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>
   -- require("dapui").open()
@@ -167,21 +146,21 @@ local mappings = {
     name = "Find",
     b = { "<cmd>Telescope buffers theme=ivy<cr>", "Buffers" },
     B = { "<cmd>Telescope file_browser theme=ivy<cr>", "File Browser" },
-    c = { "<cmd>Telescope colorscheme<cr>", "Colorscheme" },
-    f = {
-      "<cmd>lua require('telescope.builtin').find_files(require('telescope.themes').get_dropdown{previewer = false})<cr>",
-      "Find files",
-    },
-    t = { "<cmd>Telescope live_grep theme=ivy<cr>", "Find Text" },
+    c = { "<cmd>Telescope commands<cr>", "Commands" },
+    C = { "<cmd>Telescope colorscheme<cr>", "Colorscheme" },
+    f = { "<cmd>lua require('telescope.builtin').find_files()<cr>", "Find files in CWD" },
+    s = { "<cmd>Telescope grep_string theme=ivy<cr>", "Grep word under cursor" },
+    g = { "<cmd>Telescope live_grep theme=ivy<cr>", "Live Grep" },
+    G = { "<cmd>Telescope live_grep_raw theme=ivy<cr>", "Live Grep Raw" },
     h = { "<cmd>Telescope help_tags<cr>", "Help" },
-    i = { "<cmd>lua require('telescope').extensions.media_files.media_files()<cr>", "Media" },
     l = { "<cmd>Telescope resume<cr>", "Last Search" },
+    -- m = { "<cmd>lua require('telescope').extensions.media_files.media_files()<cr>", "Media" },
+    m = { "<cmd>lua require('telescope').marks<cr>", "Marks" },
     M = { "<cmd>Telescope man_pages<cr>", "Man Pages" },
-    -- r = { "<cmd>Telescope oldfiles<cr>", "Recent File" },
-    r = { "<cmd>Telescope frecency<cr>", "(F)Recent File" },
+    r = { "<cmd>Telescope oldfiles<cr>", "Old Files" },
     R = { "<cmd>Telescope registers<cr>", "Registers" },
     k = { "<cmd>Telescope keymaps<cr>", "Keymaps" },
-    C = { "<cmd>Telescope commands<cr>", "Commands" },
+    t = { "<cmd>lua require('user.utils').open_trove_url({line=vim.api.nvim_get_current_line()})<cr>", "Open trove:// url"}
   },
 
   g = {
@@ -195,58 +174,72 @@ local mappings = {
     R = { "<cmd>lua require 'gitsigns'.reset_buffer()<cr>", "Reset Buffer" },
     s = { "<cmd>Git<CR>", "Status" },
     S = { "<cmd>lua require 'gitsigns'.stage_hunk()<cr>", "Stage Hunk" },
-    u = {
-      "<cmd>lua require 'gitsigns'.undo_stage_hunk()<cr>",
-      "Undo Stage Hunk",
-    },
-    o = { "<cmd>Telescope git_status<cr>", "Open changed file" },
+    U = { "<cmd>lua require 'gitsigns'.undo_stage_hunk()<cr>", "Undo Stage Hunk" },
+    o = { "<cmd>Telescope git_status<cr>", "Open changed files" },
     b = { "<cmd>Telescope git_branches<cr>", "Checkout branch" },
     c = { "<cmd>Telescope git_commits<cr>", "Checkout commit" },
-    d = {
-      "<cmd>Gitsigns diffthis HEAD<cr>",
-      "Diff",
-    },
-    G = {
-      name = "Gist",
-      a = { "<cmd>Gist -b -a<cr>", "Create Anon" },
-      d = { "<cmd>Gist -d<cr>", "Delete" },
-      f = { "<cmd>Gist -f<cr>", "Fork" },
-      g = { "<cmd>Gist -b<cr>", "Create" },
-      l = { "<cmd>Gist -l<cr>", "List" },
-      p = { "<cmd>Gist -b -p<cr>", "Create Private" },
+    d = { "<cmd>Gitsigns diffthis HEAD<cr>", "Diff" },
+    G = { name = "Gist",
+          a = { "<cmd>Gist -b -a<cr>", "Create Anon" },
+          d = { "<cmd>Gist -d<cr>", "Delete" },
+          f = { "<cmd>Gist -f<cr>", "Fork" },
+          g = { "<cmd>Gist -b<cr>", "Create" },
+          l = { "<cmd>Gist -l<cr>", "List" },
+          p = { "<cmd>Gist -b -p<cr>", "Create Private" },
     },
   },
 
-  L = {
+  l = {
     name = "LSP",
     a = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Code Action" },
-    d = { "<cmd>TroubleToggle<cr>", "Diagnostics" },
-    w = {
-      "<cmd>Telescope lsp_workspace_diagnostics<cr>",
-      "Workspace Diagnostics",
-    },
+    d = { "<cmd>TroubleToggle document_diagnostics<cr>", "Diagnostics" },
+    w = { "<cmd>TroubleToggle workspace_diagnostics<cr>", "Workspace Diagnostics" },
     f = { "<cmd>lua vim.lsp.buf.format({ async = true })<cr>", "Format" },
     F = { "<cmd>LspToggleAutoFormat<cr>", "Toggle Autoformat" },
+    fr = { "<cmd>luafile %<cr>", "luafile %" },
     i = { "<cmd>LspInfo<cr>", "Info" },
     I = { "<cmd>LspInstallInfo<cr>", "Installer Info" },
-    j = {
-      "<cmd>lua vim.diagnostic.goto_next({buffer=0})<CR>",
-      "Next Diagnostic",
-    },
-    k = {
-      "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>",
-      "Prev Diagnostic",
-    },
-    l = { "<cmd>lua vim.lsp.codelens.run()<cr>", "CodeLens Action" },
-    o = { "<cmd>SymbolsOutline<cr>", "Outline" },
-    q = { "<cmd>lua vim.lsp.diagnostic.set_loclist()<cr>", "Quickfix" },
+    j = { "<cmd>lua vim.diagnostic.goto_next({buffer=0})<CR>", "Next Diagnostic" },
+    k = { "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>", "Prev Diagnostic" },
+    -- l = { "<cmd>lua vim.lsp.codelens.run()<cr>", "CodeLens Action" },
+    o = { "<cmd>SymbolsOutline<cr>", "Outline Symbols" },
+    t = { "<cmd>AerialToggle<cr>", "Aerial Tree" },
+    -- Maybe I should change vvv to quickfix? Still need to see which one I'm using more...
+    q = { "<cmd>lua vim.diagnostic.setloclist()<cr>", "Quickfix" },
+    Q = { "<cmd>TroubleToggle loclist<cr>", "Quickfix" },
     r = { "<cmd>lua vim.lsp.buf.rename()<cr>", "Rename" },
     R = { "<cmd>TroubleToggle lsp_references<cr>", "References" },
     s = { "<cmd>Telescope lsp_document_symbols<cr>", "Document Symbols" },
-    S = {
-      "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>",
-      "Workspace Symbols",
-    },
+    S = { "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>", "Workspace Symbols" },
+  },
+
+  o = {
+    name = "Options",
+    p = { '<cmd>lua require("user.utils").toggle_option("paste")<cr>', "Toggle paste" },
+    w = { '<cmd>lua require("user.utils").toggle_option("wrap")<cr>', "Toggle wrap" },
+    r = { '<cmd>lua require("user.utils").toggle_option("relativenumber")<cr>', "Toggle relativenumber" },
+    c = { '<cmd>lua require("user.utils").toggle_option("cursorcolumn")<cr>', "Toggle cursorcolumn" },
+    l = { '<cmd>lua require("user.utils").toggle_option("cursorline")<cr>', "Toggle cursorline" },
+    s = { '<cmd>lua require("user.utils").toggle_option("spell")<cr>', "Toggle spell" },
+    S = { '<cmd>lua require("user.utils").toggle_option("wrapscan")<cr>', "Toggle wrapscan" },
+  },
+
+  p = {
+    name = "Packer",
+    c = { "<cmd>PackerCompile<cr>", "Compile" },
+    C = { "<cmd>PackerClean<cr>", "Clean" },
+    i = { "<cmd>PackerInstall<cr>", "Install" },
+    s = { "<cmd>PackerSync<cr>", "Sync" },
+    S = { "<cmd>PackerStatus<cr>", "Status" },
+    u = { "<cmd>PackerUpdate<cr>", "Update" },
+  },
+
+  r = {
+    name = "Replace",
+    n = { "<cmd>lua vim.lsp.buf.rename()<cr>", "LSP Rename" },
+    r = { "<cmd>lua require('spectre').open()<cr>", "Replace" },
+    w = { "<cmd>lua require('spectre').open_visual({select_word=true})<cr>", "Replace Word" },
+    f = { "<cmd>lua require('spectre').open_file_search()<cr>", "Replace Buffer" },
   },
 
   -- s = {
@@ -295,6 +288,14 @@ local mappings = {
     h = { "<cmd>TSHighlightCapturesUnderCursor<cr>", "Highlight" },
     p = { "<cmd>TSPlaygroundToggle<cr>", "Playground" },
   },
+
+  -- Vista stuff
+  v = {
+    name = "Vista",
+    c = { "<cmd>Vista!<cr>", "Close Vista window" },
+    t = { "<cmd>Vista!!<cr>", "Toggle Vista window" },
+    f = { "<cmd>Vista focus<cr>", "Toggle focus" },
+  }
 }
 
 -- mappings for VISUAL mode starting with <leader>
@@ -306,17 +307,28 @@ local vmappings = {
 -- general mappings for "Marks" of all sorts in NORMAL mode starting with 'm' (no <leader>).
 local m_mappings = {
   a = { "<cmd>BookmarkAnnotate<cr>", "Add Annotated Bookmark" },
-  c = { "<cmd>BookmarkClear<cr>", "Clear Bookmark" },
   m = { "<cmd>BookmarkToggle<cr>", "Toggle Bookmark" },
   j = { "<cmd>BookmarkNext<cr>", "Next Bookmark" },
   k = { "<cmd>BookmarkPrev<cr>", "Prev Bookmark" },
-  s = { "<cmd>lua require('telescope').extensions.vim_bookmarks.all({ hide_filename=false, prompt_title=\"bookmarks\", shorten_path=false })<cr>",
+  S = { "<cmd>lua require('telescope').extensions.vim_bookmarks.all({ hide_filename=false, prompt_title=\"bookmarks\", shorten_path=false })<cr>",
     "Show All Bookmarks",
   },
-  S = { "<cmd>lua require('telescope').extensions.vim_bookmarks.current_file()<cr>", "Show Bookmarks in buffer", },
+  s = { "<cmd>lua require('telescope').extensions.vim_bookmarks.current_file()<cr>", "Show Bookmarks in buffer", },
   x = { "<cmd>BookmarkClearAll<cr>", "Clear All Bookmarks" },
+  -- Harpoon
   h = { '<cmd>lua require("harpoon.mark").add_file()<cr>', "Add to Harpoon" },
   u = { '<cmd>lua require("harpoon.ui").toggle_quick_menu()<cr>', "Show Harpoon Menu" },
+  n = { '<cmd>lua require("harpoon.ui").nav_next()<cr>', "Next harpooned file" },
+  p = { '<cmd>lua require("harpoon.ui").nav_prev()<cr>', "Previous harpooned file" },
+  c = { "<cmd>lua require('harpoon.cmd-ui').toggle_quick_menu()<cr>", "Harpooned commands" },
+  -- NOTE: testing these, there are many more options. Trying to create REPL/testing-automation
+  t = {
+    g1 = { '<cmd>lua require("harpoon.tmux").gotoTerminal(1)<cr>', 'Goto Term1' },
+    g2 = { '<cmd>lua require("harpoon.tmux").gotoTerminal(2)<cr>', 'Goto Term2' },
+    g3 = { '<cmd>lua require("harpoon.tmux").gotoTerminal(3)<cr>', 'Goto Term3' },
+    g4 = { '<cmd>lua require("harpoon.tmux").gotoTerminal(4)<cr>', 'Goto Term4' },
+    gr = { '<cmd>lua require("harpoon.tmux").gotoTerminal("{right-of}")<cr>', 'Goto Term on the right' },
+  },
 }
 
 which_key.setup(setup)

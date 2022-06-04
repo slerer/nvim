@@ -11,9 +11,10 @@ npairs.setup {
     javascript = { "string", "template_string" },
     java = false,
   },
+  disable_in_macro = true,
   disable_filetype = { "TelescopePrompt", "spectre_panel" },
   fast_wrap = {
-    map = "<M-e>",
+    map = "<A-e>",
     chars = { "{", "[", "(", '"', "'" },
     pattern = string.gsub([[ [%'%"%)%>%]%)%}%,] ]], "%s+", ""),
     offset = 0, -- Offset from pattern match
@@ -25,9 +26,11 @@ npairs.setup {
   },
 }
 
--- local cmp_autopairs = require "nvim-autopairs.completion.cmp"
--- local cmp_status_ok, cmp = pcall(require, "cmp")
--- if not cmp_status_ok then
---   return
--- end
--- cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done { map_char = { tex = "" } })
+-- If you want insert `(` after select function or method item
+local cmp_autopairs = require "nvim-autopairs.completion.cmp"
+local cmp_status_ok, cmp = pcall(require, "cmp")
+if not cmp_status_ok then
+  return
+end
+
+cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done { map_char = { tex = "" } })

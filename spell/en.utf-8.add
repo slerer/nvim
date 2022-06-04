@@ -75,3 +75,5 @@ statusline
 Lualine
 lightline
 galaxyline
+coords
+intrinsics

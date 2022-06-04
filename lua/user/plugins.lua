@@ -50,22 +50,33 @@ return packer.startup(function(use)
   use "nvim-lua/plenary.nvim" -- Useful lua functions used by lots of plugins
   use "windwp/nvim-autopairs" -- Autopairs, integrates with both cmp and treesitter
   use "numToStr/Comment.nvim"
-  use "kyazdani42/nvim-web-devicons"
+  -- use { 'kyazdani42/nvim-web-devicons', event = 'VimEnter' }
+  use { 'kyazdani42/nvim-web-devicons' }
+  use {
+    'yamatsum/nvim-nonicons',
+    requires = {'kyazdani42/nvim-web-devicons'}
+  }
   use { "kyazdani42/nvim-tree.lua" }
   use "tamago324/lir.nvim"
-  -- use "kosayoda/nvim-lightbulb"
+  use "kosayoda/nvim-lightbulb"
   use "akinsho/bufferline.nvim"
   use "moll/vim-bbye"
+  -- use "windwp/windline.nvim" -- giving lualine a chance...
   use "nvim-lualine/lualine.nvim"
   use "akinsho/toggleterm.nvim"
   use "ahmedkhalf/project.nvim"
   use "lewis6991/impatient.nvim"
   use "lukas-reineke/indent-blankline.nvim"
+  -- Add indent object for vim (useful for languages like Python)
+  use{ "michaeljsmith/vim-indent-object" }
   use "goolord/alpha-nvim"
   use "antoinemadec/FixCursorHold.nvim" -- This is needed to fix lsp doc highlight
   use "folke/which-key.nvim"
   use "unblevable/quick-scope"
+  -- hop or leap?-------
   use "phaazon/hop.nvim"
+  use "ggandor/leap.nvim"
+  ----------------------
   use "andymass/vim-matchup"
   use "nacro90/numb.nvim"
   use "monaqa/dial.nvim"
@@ -74,9 +85,10 @@ return packer.startup(function(use)
   use "folke/zen-mode.nvim"
   -- use "karb94/neoscroll.nvim"
   use "folke/todo-comments.nvim"
+  use "nanotee/zoxide.vim"
 
   -- nvim-bqf for better quickfix window.
-  use { "kevinhwang91/nvim-bqf", ft = "qf" }
+  use { "kevinhwang91/nvim-bqf" }
   -- optional -- fzf fun:
   -- "Old-way"
   use {'junegunn/fzf', run = function()
@@ -87,7 +99,7 @@ return packer.startup(function(use)
 
   -- "New-way"
   use "vijaymarupudi/nvim-fzf"
-  -- use "vijaymarupudi/nvim-fzf-commands" -- timed-out, should retry?
+  use "vijaymarupudi/nvim-fzf-commands" -- timed-out, should retry?
   use { 'ibhagwan/fzf-lua',
     -- optional for icon support
     requires = { 'kyazdani42/nvim-web-devicons' }
@@ -104,36 +116,60 @@ return packer.startup(function(use)
   use { "nyngwang/NeoZoom.lua", branch = "neo-zoom-original" }
 	use { "SmiteshP/nvim-gps", requires = "nvim-treesitter/nvim-treesitter" }
   use { "michaelb/sniprun", run = "bash ./install.sh" }
-  -- use {
-  --
-  --   "iamcco/markdown-preview.nvim",
-  --   run = "cd app && npm install",
-  --   ft = "markdown",
-  -- }
   use "matbme/JABS.nvim"
 
   -- Colorschemes
-  use "folke/tokyonight.nvim"
-  use "lunarvim/darkplus.nvim"
-  use "gruvbox-community/gruvbox"
-  use "doums/darcula"
-  use "sainnhe/gruvbox-material"
-  use "phanviet/vim-monokai-pro"
-  use "flazz/vim-colorschemes"
-  use "chriskempson/base16-vim"
-  use "kyazdani42/blue-moon"
-  use { "dracula/vim", as = "dracula" }
+  use { "folke/tokyonight.nvim" }
+  use { "lunarvim/darkplus.nvim" }
+  use { "gruvbox-community/gruvbox" }
+  use { "sainnhe/gruvbox-material" }
+  use { "flazz/vim-colorschemes" }
+  use { "chriskempson/base16-vim" }
+  use { "lifepillar/vim-gruvbox8" }
+  use { "navarasu/onedark.nvim" }
+  use { "sainnhe/edge" }
+  use { "sainnhe/sonokai" }
+  use { "shaunsingh/nord.nvim" }
+  use { "NTBBloodbath/doom-one.nvim" }
+  use { "sainnhe/everforest" }
+  use { "EdenEast/nightfox.nvim" }
+  use { "rebelot/kanagawa.nvim" }
+  use { "eddyekofo94/gruvbox-flat.nvim",
+        config = function()
+          vim.g.gruvbox_flat_style = "hard"
+          -- vim.g.gruvbox_sidebars = true
+          -- vim.g.gruvbox_dark_sidebar = true
+          -- vim.g.gruvbox_theme = { ToDo = { bg = "" } }
+        end
+  }
+  use { "Mofiqul/vscode.nvim",
+        config = function()
+          -- Lua:
+          -- For dark theme
+          vim.g.vscode_style = "dark"
+          -- For light theme
+          -- vim.g.vscode_style = "light"
+          -- Enable transparent background
+          -- vim.g.vscode_transparent = 1
+          -- Enable italic comment
+          -- vim.g.vscode_italic_comment = 1
+          -- Disable nvim-tree background color
+          -- vim.g.vscode_disable_nvimtree_bg = true
+          -- vim.cmd([[colorscheme vscode]])
+        end,
+  }
 
   -- cmp plugins
-  use "hrsh7th/nvim-cmp"
-  use "hrsh7th/cmp-buffer" -- buffer completions
-  use "hrsh7th/cmp-path" -- path completions
-  use "hrsh7th/cmp-cmdline" -- cmdline completions
-  use "saadparwaiz1/cmp_luasnip" -- snippet completions
-  use "hrsh7th/cmp-nvim-lsp"
-  use "hrsh7th/cmp-emoji"
-  use "hrsh7th/cmp-nvim-lua"
-  use "f3fora/cmp-spell"
+  use { "hrsh7th/nvim-cmp" }
+  use { "hrsh7th/cmp-buffer" } -- buffer completions
+  use { "hrsh7th/cmp-path" } -- path completions
+  use { "hrsh7th/cmp-cmdline" } -- cmdline completions
+  use { "saadparwaiz1/cmp_luasnip" } -- snippet completions
+  use { "hrsh7th/cmp-nvim-lsp" }
+  use { "hrsh7th/cmp-emoji" }
+  use { "hrsh7th/cmp-nvim-lua" }
+  use { "f3fora/cmp-spell" }
+  use { "hrsh7th/cmp-omni" }
 
   -- snippets
   use "L3MON4D3/LuaSnip" --snippet engine
@@ -141,7 +177,7 @@ return packer.startup(function(use)
   -- use "honza/vim-snippets"
 
   -- LSP
-  use "neovim/nvim-lspconfig" -- enable LSP
+  use { "neovim/nvim-lspconfig" } -- enable LSP
   use "williamboman/nvim-lsp-installer" -- simple to use language server installer
   use "tamago324/nlsp-settings.nvim" -- language server settings defined in json for
   use "jose-elias-alvarez/null-ls.nvim" -- for formatters and linters
@@ -151,36 +187,52 @@ return packer.startup(function(use)
   --
   use "ray-x/lsp_signature.nvim"
   use "b0o/SchemaStore.nvim"
-  use { "folke/trouble.nvim", cmd = "TroubleToggle", }
+
+  use { "folke/trouble.nvim" }
+  -- use { "folke/trouble.nvim", cmd = "TroubleToggle", }
   -- use "github/copilot.vim"
   use "RRethy/vim-illuminate"
-
+  use{ "itchyny/vim-highlighturl" } -- Highlight URLs inside vim
+  use { 'jdhao/whitespace.nvim' } -- show and trim trailing whitespaces
   -- Java
   -- use "mfussenegger/nvim-jdtls"
 
   -- Telescope
   use "nvim-telescope/telescope.nvim"
-  use "jvgrootveld/telescope-zoxide"
-  use "nvim-telescope/telescope-symbols.nvim"
-  use "nvim-telescope/telescope-dap.nvim"
+  use { "jvgrootveld/telescope-zoxide" }
+  use { "nvim-telescope/telescope-symbols.nvim" }
+  use { "nvim-telescope/telescope-dap.nvim" }
   use { 'nvim-telescope/telescope-live-grep-raw.nvim' }
-  use "tom-anders/telescope-vim-bookmarks.nvim"
-  use "nvim-telescope/telescope-media-files.nvim"
-  use "nvim-telescope/telescope-ui-select.nvim"
-  use "nvim-telescope/telescope-file-browser.nvim"
+  use { "tom-anders/telescope-vim-bookmarks.nvim" }
+  use { "nvim-telescope/telescope-media-files.nvim" }
+  use { "nvim-telescope/telescope-ui-select.nvim" }
+  use { "nvim-telescope/telescope-file-browser.nvim" }
   -- use "nvim-telescope/telescope-fzy-native.nvim"
-  use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
-  use "nvim-telescope/telescope-project.nvim"
-  use {
-    "nvim-telescope/telescope-frecency.nvim",
+  use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+  use { "nvim-telescope/telescope-project.nvim" }
+  use { "nvim-telescope/telescope-frecency.nvim", requires = {"tami5/sqlite.lua"} }
+  use { "LinArcX/telescope-env.nvim" }
+  use { -- TODO: Add config file + read docs for this:
+    -- BUG: breaks yanking to "0 :(
+    "AckslD/nvim-neoclip.lua",
+    requires = {
+      {'tami5/sqlite.lua', module = 'sqlite'},
+      -- you'll need at least one of these
+      {'nvim-telescope/telescope.nvim'},
+      -- {'ibhagwan/fzf-lua'},
+    },
     config = function()
-      require"telescope".load_extension("frecency")
+      require('neoclip').setup()
     end,
-    requires = {"tami5/sqlite.lua"}
+    after = 'telescope.nvim',
   }
+  use { 'nvim-telescope/telescope-hop.nvim' }
+  -- use { 'nvim-telescope/telescope-hop.nvim', after = 'telescope.nvim' }
 
   -- Treesitter
-  use { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate", }
+  -- TODO: add 'after =' to the rest of the dependent on treesitter
+  -- use { "nvim-treesitter/nvim-treesitter", event = 'BufEnter', run = ":TSUpdate" }
+  use { "nvim-treesitter/nvim-treesitter", run = ":lua pcall(vim.cmd, 'TSUpdate')" }
   use "JoosepAlviste/nvim-ts-context-commentstring"
   use { "p00f/nvim-ts-rainbow" }
   -- use {'christianchiarulli/nvim-ts-rainbow'}
@@ -189,6 +241,8 @@ return packer.startup(function(use)
   use "romgrk/nvim-treesitter-context"
   use "mizlan/iswap.nvim" -- Allows for swapping items etc. (:ISwap, :ISwapWith)
 
+  use "wellle/targets.vim"
+
   -- Git
   use "lewis6991/gitsigns.nvim"
   use "f-person/git-blame.nvim"
@@ -196,46 +250,105 @@ return packer.startup(function(use)
   use "mattn/vim-gist"
   use "mattn/webapi-vim"
   use "https://github.com/rhysd/conflict-marker.vim" -- UI Component Library for Neovim.
+  -- Testing these:
+  use "kdheepak/lazygit.nvim"
+  use {'Odie/gitabra', opt = true, cmd = {'Gitabra'} }
+  -- should give this a try:
+  -- use "akinsho/git-conflict.nvim"
 
   -- DAP
   use "mfussenegger/nvim-dap"
   use "theHamsta/nvim-dap-virtual-text"
   use "rcarriga/nvim-dap-ui"
-  use "Pocco81/DAPInstall.nvim"
+  use "Pocco81/dap-buddy.nvim"
+  -- use "Pocco81/DAPInstall.nvim"
+  -- experimental:
+  use "HiPhish/debugpy.nvim"
+  use { "rcarriga/vim-ultest",
+        requires = {"vim-test/vim-test"},
+        run = ":UpdateRemotePlugins" }
+
 
   -- General QoL Plugins I'm testing:
+  use "rafcamlet/nvim-luapad"
   use "ron89/thesaurus_query.vim"
   use "AndrewRadev/splitjoin.vim"
   -- https://github.com/AndrewRadev/sideways.vim
   use "AndrewRadev/sideways.vim"
   use "t9md/vim-choosewin"
-  use "nathom/filetype.nvim"
+  use "mickael-menu/zk-nvim"
+  use "stsewd/sphinx.nvim"
+  use({
+    "kwkarlwang/bufresize.nvim",
+    config = function()
+        local opts = { noremap=true, silent=true }
+        require("bufresize").setup(opts)
+    end,
+  })
+  use{ "anuvyklack/pretty-fold.nvim",
+   requires = 'anuvyklack/nvim-keymap-amend', -- only for preview
+   config = function()
+      require('pretty-fold').setup()
+      require('pretty-fold.preview').setup()
+   end
+  }
+  use {
+    'bennypowers/nvim-regexplainer',
+    config = function() require'regexplainer'.setup() end,
+    requires = {
+      'nvim-treesitter/nvim-treesitter',
+      'MunifTanjim/nui.nvim', }
+  }
+  use {
+  "danymat/neogen",
+  config = function()
+    require('neogen').setup {
+      enabled = true,
+      languages = {
+        python = {
+          template = {
+            annotation_convention = "reST"          }
+          },
+        }
+      }
+    end,
+      requires = "nvim-treesitter/nvim-treesitter",
+      -- Uncomment next line if you want to follow only stable versions
+      tag = "*",
+      snippet_engine = "luasnip",
+    }
+  use {
+    "luukvbaal/stabilize.nvim",
+    config = function() require("stabilize").setup({ nested = "QuickFixCmdPost,DiagnosticChanged *" }) end
+  }
+
+  -- Testing Markdown stuff:
+  use {"ellisonleao/glow.nvim", branch = 'main'}
+  use{
+    "iamcco/markdown-preview.nvim",
+    run = function()
+      fn["mkdp#util#install"]()
+    end,
+    ft = { "markdown" },
+  }
+  use { "skanehira/preview-markdown.vim" }
+
+  -- Should make neovim load files (and startup in general...) faster. Need to read on how to properly load this vvv
+  -- use "nathom/filetype.nvim"
   -- use {
   --   "nathom/filetype.nvim",
   --   config = function()
   --     require("filetype").setup()
   --   end,
   -- }
-  use {
-    'rmagatti/auto-session',
-    config = function()
-      require('auto-session').setup {
-        log_level = 'info',
-        auto_session_suppress_dirs = {'~/', '~/git/'}
-      }
-    end
-  }
-  use {
-    'rmagatti/session-lens',
-    requires = {'rmagatti/auto-session', 'nvim-telescope/telescope.nvim'},
-    config = function()
-      require('session-lens').setup({--[[your custom config--]]})
-    end
-  }
+  -- Had some annoying things with automatic session. Will give it another try when I have the time to mess around.
+  -- remember the extension is also loaded in telescope.lua
+  use { 'rmagatti/auto-session' }
+  use { 'rmagatti/session-lens', requires = {'rmagatti/auto-session', 'nvim-telescope/telescope.nvim'} }
 
   -- OLD plugins here:
   use "AndrewRadev/linediff.vim"
-  use "vim-scripts/kwbdi.vim"
+  -- use "vim-scripts/kwbdi.vim"
   use "machakann/vim-sandwich"
   -- use "tpope/vim-commentary"
   -- use "jeetsukumaran/vim-markology"
@@ -250,9 +363,34 @@ return packer.startup(function(use)
   use "junegunn/gv.vim"
   -- use "borissov/fugitive-bitbucketserver"
   -- use "kassio/neoterm"
-  use "kevinhwang91/nvim-hlslens" -- Better searching highlighting.
-  use "vim-scripts/IndexedSearch" -- Adds 'Match XX of YY' in status-line when searching.
+  -- Show match number and index for searching
+  -- use "vim-scripts/IndexedSearch" -- Adds 'Match XX of YY' in status-line when searching.
   use "MunifTanjim/nui.nvim" -- UI Component Library for Neovim.
+  use {
+    'kevinhwang91/nvim-hlslens',
+    config = function()
+      local kopts = {noremap = true, silent = true}
+
+      vim.api.nvim_set_keymap('n', 'n',
+          [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]],
+          kopts)
+      vim.api.nvim_set_keymap('n', 'N',
+          [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]],
+          kopts)
+      vim.api.nvim_set_keymap('n', '*', [[*<Cmd>lua require('hlslens').start()<CR>]], kopts)
+      vim.api.nvim_set_keymap('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]], kopts)
+      vim.api.nvim_set_keymap('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]], kopts)
+      vim.api.nvim_set_keymap('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]], kopts)
+      require('hlslens').setup({
+        calm_down = true,
+        -- nearest_only = true,
+        -- nearest_float_when = 'always'
+      })
+    end
+
+  }
+  use "FooSoft/vim-argwrap"
+  -- use "tpope/vim-characterize"
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins

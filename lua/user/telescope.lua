@@ -4,6 +4,7 @@ if not status_ok then
 end
 
 local actions = require "telescope.actions"
+local trouble = require("trouble.providers.telescope")
 local icons = require("user.icons")
 
 telescope.setup {
@@ -21,17 +22,17 @@ telescope.setup {
         ["<C-j>"] = actions.move_selection_next,
         ["<C-k>"] = actions.move_selection_previous,
 
-        ["<C-c>"] = actions.close,
-
         ["<Down>"] = actions.move_selection_next,
         ["<Up>"] = actions.move_selection_previous,
+
+        ["<C-c>"] = actions.close,
 
         ["<CR>"] = actions.select_default,
         ["<C-s>"] = actions.select_horizontal,
         ["<C-v>"] = actions.select_vertical,
-        ["<C-t>"] = actions.select_tab,
+        ["<C-t>"] = trouble.open_with_trouble,
 
-        ['<c-d>'] = require('telescope.actions').delete_buffer,
+        ['<c-x>'] = require('telescope.actions').delete_buffer,
 
         ["<C-u>"] = actions.preview_scrolling_up,
         ["<C-d>"] = actions.preview_scrolling_down,
@@ -46,15 +47,26 @@ telescope.setup {
         -- ["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
         -- ["<M-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
         ["<C-l>"] = actions.complete_tag,
-        ["<C-_>"] = actions.which_key, -- keys from pressing <C-/>
+        ["<C-/>"] = actions.which_key, -- keys from pressing <C-/>
+        ["<C-h>"] = function(prompt_bufnr) telescope.extensions.hop._hop(prompt_bufnr) end,  -- hop.hop_toggle_selection
+        -- custom hop loop to multi selects and sending selected entries to quickfix list
+        ["<C-space>"] = function(prompt_bufnr)
+          local opts = {
+            callback = actions.toggle_selection,
+            loop_callback = actions.send_selected_to_qflist,
+          }
+          require("telescope").extensions.hop._hop_loop(prompt_bufnr, opts)
+        end,
       },
 
       n = {
         ["<esc>"] = actions.close,
         ["<CR>"] = actions.select_default,
-        ["<C-x>"] = actions.select_horizontal,
+        ["<C-s>"] = actions.select_horizontal,
         ["<C-v>"] = actions.select_vertical,
-        ["<C-t>"] = actions.select_tab,
+        ["<C-t>"] = trouble.open_with_trouble,
+
+        ['<c-x>'] = require('telescope.actions').delete_buffer,
 
         ["<Tab>"] = actions.toggle_selection + actions.move_selection_worse,
         ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_better,
@@ -122,6 +134,26 @@ telescope.setup {
       case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
                                        -- the default case_mode is "smart_case"
     },
+    hop = {
+      -- the shown `keys` are the defaults, no need to set `keys` if defaults work for you ;)
+      keys = {"a", "s", "d", "f", "g", "h", "j", "k", "l", ";",
+              "q", "w", "e", "r", "t", "y", "u", "i", "o", "p",
+              "A", "S", "D", "F", "G", "H", "J", "K", "L", ":",
+              "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", },
+      -- Highlight groups to link to signs and lines; the below configuration refers to demo
+      -- sign_hl typically only defines foreground to possibly be combined with line_hl
+      sign_hl = { "WarningMsg", "Title" },
+      -- optional, typically a table of two highlight groups that are alternated between
+      line_hl = { "CursorLine", "Normal" },
+      -- options specific to `hop_loop`
+      -- true temporarily disables Telescope selection highlighting
+      clear_selection_hl = false,
+      -- highlight hopped to entry with telescope selection highlight
+      -- note: mutually exclusive with `clear_selection_hl`
+      trace_entry = true,
+      -- jump to entry where hoop loop was started from
+      reset_selection = true,
+    },
     media_files = {
       -- filetypes whitelist
       -- defaults to {"png", "jpg", "mp4", "webm", "pdf"}
@@ -152,7 +184,21 @@ telescope.setup {
   },
 }
 
+telescope.load_extension('harpoon')
+
 telescope.load_extension "ui-select"
+
+--
+telescope.load_extension('hop')
+
+-- NOTE: doesn't need this vvv to work?
+-- telescope.load_extension('neoclip')
+
+--
+telescope.load_extension("lazygit")
+
+--
+telescope.load_extension('env')
 
 --
 telescope.load_extension('vim_bookmarks')
@@ -178,7 +224,7 @@ telescope.load_extension "project"
 -- lua require'telescope'.extensions.project.project{} to activate picker
 
 -- https://github.com/nvim-telescope/telescope-rg.nvim
-telescope.load_extension "live_grep_raw" 
+telescope.load_extension "live_grep_raw"
 
 -- https://github.com/nvim-telescope/telescope-dap.nvim
 telescope.load_extension('dap')

@@ -3,7 +3,7 @@ if not status_ok then
   return
 end
 
-local icons = require "user.icons"
+-- local icons = require "user.icons"
 
 local cfg = {
   debug = false, -- set to true to enable debug logging
@@ -24,7 +24,8 @@ local cfg = {
   -- this setting will be helpful if you do not want the PUM and floating win overlap
   fix_pos = false, -- set to true, the floating window will not auto-close until finish all parameters
   hint_enable = true, -- virtual hint enable
-  hint_prefix = icons.misc.Squirrel .. " ", -- 🐼 Panda for parameter
+  -- hint_prefix = icons.misc.Squirrel .. " ", -- 🐼 Panda for parameter
+  hint_prefix = "🐼 ", -- Panda for parameter
   hint_scheme = "Comment",
   use_lspsaga = false, -- set to true if you want to use lspsaga popup
   hi_parameter = "LspSignatureActiveParameter", -- how your parameter will be highlight
@@ -38,7 +39,7 @@ local cfg = {
   always_trigger = false, -- sometime show signature on new line or in middle of parameter can be confusing, set it to false for #58
 
   auto_close_after = nil, -- autoclose signature float win after x sec, disabled if nil.
-  extra_trigger_chars = {}, -- Array of extra characters that will trigger signature completion, e.g., {"(", ","}
+  extra_trigger_chars = { "(", "," }, -- Array of extra characters that will trigger signature completion, e.g., {"(", ","}
   zindex = 200, -- by default it will be on top of all floating windows, set to <= 50 send it to bottom
 
   padding = "", -- character to pad on left and right of signature can be ' ', or '|'  etc

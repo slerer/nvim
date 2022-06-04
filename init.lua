@@ -1,19 +1,22 @@
-local status_ok, filetype = pcall(require, "filetype")
-if status_ok then
-  require("filetype").setup({})
-end
+-- local status_ok, filetype = pcall(require, "filetype")
+-- if status_ok then
+--   require("filetype").setup({})
+-- end
 
 require "user.options"
-require "user.keymaps"
+require "user.globals"
+require "user.utils"
 require "user.plugins"
 require "user.autocommands"
 require "user.user-commands"
+require "user.keymaps"
 require "user.colorscheme"
 require "user.cmp-spell"
 require "user.cmp"
 require "user.lsp"
-require "user.telescope"
 require "user.treesitter"
+require "user.telescope"
+require "user.harpoon"
 require "user.autopairs"
 require "user.comment"
 require "user.gitsigns"
@@ -42,13 +45,13 @@ require "user.git-blame"
 require "user.gist"
 require "user.gitlinker"
 -- require "user.session-manager"
+require "user.auto-session"
 -- require "user.surround"
 require "user.notify"
 require "user.ts-context"
 require "user.registers"
 require "user.telescope-file-browser"
 require "user.sniprun"
-require "user.functions"
 -- require "user.copilot"
 require "user.gps"
 require "user.illuminate"
@@ -58,3 +61,7 @@ require "user.jabs"
 require "user.lsp_colors"
 require "user.thesaurus-query" -- sets up thesaurus stuff
 require "user.aerial"
+require "user.zk"
+require "user.trouble"
+-- require "user.shade"
+require "user.keymap-amend"

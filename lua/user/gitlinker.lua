@@ -6,7 +6,7 @@ end
 gitlinker.setup({
 	opts = {
 		callbacks = {
-			["git.comcast.com"] = require("gitlinker.hosts").get_github_type_url,
+			["https://github.pie.apple.com/DSI-SW/ADCamera"] = require("gitlinker.hosts").get_github_type_url,
 		},
 		-- remote = 'github', -- force the use of a specific remote
 		-- adds current line nr in the url for normal mode
@@ -15,7 +15,7 @@ gitlinker.setup({
 		action_callback = require("gitlinker.actions").open_in_browser,
     -- action_callback = require"gitlinker.actions".copy_to_clipboard,
 		-- print the url after performing the action
-		print_url = false,
+		print_url = true,
 		-- mapping to call url generation
 		mappings = "<leader>gy",
 	},

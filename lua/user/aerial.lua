@@ -62,7 +62,7 @@ aerial.setup({
   highlight_closest = true,
 
   -- Highlight the symbol in the source buffer when cursor is in the aerial win
-  highlight_on_hover = false,
+  highlight_on_hover = true,
 
   -- When jumping to a symbol, highlight the line for this many ms.
   -- Set to false to disable
@@ -123,7 +123,7 @@ aerial.setup({
 
   -- Use symbol tree for folding. Set to true or false to enable/disable
   -- 'auto' will manage folds if your previous foldmethod was 'manual'
-  manage_folds = false,
+  manage_folds = true,
 
   -- These control the width of the aerial window.
   -- They can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)

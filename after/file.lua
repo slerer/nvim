@@ -1,3 +1,3 @@
-vim.cmd[[
-command! -count -nargs=* ToggleTerm lua toggleterm_wrap(<q-args>, <count>)
-]]
+-- vim.cmd[[
+-- command! -count -nargs=* ToggleTerm lua toggleterm_wrap(<q-args>, <count>)
+-- ]]

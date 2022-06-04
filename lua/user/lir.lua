@@ -8,16 +8,21 @@ local mark_actions = require "lir.mark.actions"
 local clipboard_actions = require "lir.clipboard.actions"
 
 lir.setup {
-  show_hidden_files = false,
+  show_hidden_files = true,
   devicons_enable = true,
   mappings = {
     ["l"] = actions.edit,
+    ["<Right>"] = actions.edit,
+    ["<cr>"] = actions.edit,
     ["<C-s>"] = actions.split,
     ["v"] = actions.vsplit,
     ["<C-t>"] = actions.tabedit,
 
+    ["<BS>"] = actions.up,
+    ["<Left>"] = actions.up,
     ["h"] = actions.up,
     ["q"] = actions.quit,
+    ["<esc>"] = actions.quit,
 
     ["A"] = actions.mkdir,
     ["a"] = actions.newfile,
@@ -27,10 +32,8 @@ lir.setup {
     ["i"] = actions.toggle_show_hidden,
     ["d"] = actions.delete,
 
-    ["J"] = function()
-      mark_actions.toggle_mark()
-      vim.cmd "normal! j"
-    end,
+    ["J"] = function() mark_actions.toggle_mark() vim.cmd "normal! j" end,
+    ["<TAB>"] = function() mark_actions.toggle_mark() vim.cmd "normal! j" end,
     ["c"] = clipboard_actions.copy,
     ["x"] = clipboard_actions.cut,
     ["p"] = clipboard_actions.paste,
@@ -45,8 +48,8 @@ lir.setup {
     -- -- You can define a function that returns a table to be passed as the third
     -- -- argument of nvim_open_win().
     win_opts = function()
-      local width = math.floor(vim.o.columns * 0.7)
-      local height = math.floor(vim.o.lines * 0.7)
+      local width = math.floor(vim.o.columns * 0.8)
+      local height = math.floor(vim.o.lines * 0.8)
       return {
         border = "rounded",
         width = width,
@@ -56,7 +59,7 @@ lir.setup {
       }
     end,
   },
-  hide_cursor = false,
+  hide_cursor = true,
   on_init = function()
     -- use visual mode
     vim.api.nvim_buf_set_keymap(

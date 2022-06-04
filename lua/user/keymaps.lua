@@ -1,6 +1,5 @@
 local opts = { noremap = true, silent = true }
 local opts_nowait = { noremap = true, silent = true, nowait = true }
-
 local term_opts = { silent = true }
 
 -- Shorten function name
@@ -20,25 +19,20 @@ vim.g.maplocalleader = ","
 --   command_mode = "c",
 
 -- Normal --
+-- Remap 's' to NOP to avoid accidents during sandwich operations
+keymap("n", "s", "<NOP>", opts)
 -- Remap j and k to act as expected when used on long, wrapped, lines
 keymap("n", "j", "gj", opts)
 keymap("n", "k", "gk", opts)
--- -- remap :W to :w, and :Q to :q. Yeah, I'm lazy.
--- keymap("n", ":W", ":w", opts)
--- keymap("n", ":Q", ":q", opts)
--- keymap("n", ":X", ":x", opts)
--- -- More of the same:
--- keymap("n", ":Bl", ":bl", opts)
--- keymap("n", ":Bp", ":bp", opts)
--- keymap("n", ":Bn", ":bn", opts)
--- keymap("n", ":Bd", ":bd", opts)
--- keymap("n", ":Vs", ":vs", opts)
--- keymap("n", ":Bs", ":bs", opts)
--- keymap("n", ":Cn", ":cn", opts)
--- keymap("n", ":Cp", ":cp", opts)
--- keymap("n", ":B", ":b", opts)
+-- Same for <Down> and <Up>
+keymap("n", "<Down>", "gj", opts)
+keymap("n", "<Up>", "gk", opts)
+keymap("n", "<leader>xx", "<cmd>TroubleToggle<cr>", opts)
+-- jump to the next item, skipping the groups
+keymap("n", "]t", "<cmd>lua require('trouble').next({skip_groups = true, jump = true})<cr>", opts)
+-- jump to the previous item, skipping the groups
+keymap("n", "[t", "<cmd>lua require('trouble').previous({skip_groups = true, jump = true})<cr>", opts)
 
-keymap("n", "<leader>xx", "<cmd>LspTroubleDocumentToggle<cr>", opts)
 -- Better window navigation
 -- keymap("n", "<C-h>", "<C-w>h", opts)
 -- keymap("n", "<C-j>", "<C-w>j", opts)
@@ -56,17 +50,18 @@ keymap("n", "<S-l>", ":bnext<CR>", opts)
 keymap("n", "<S-h>", ":bprevious<CR>", opts)
 
 -- Move text up and down
+-- TODO: Currently Alt or Meta key does not work for my setup with Alacritty...
 keymap("n", "<A-j>", "<Esc>:m .+1<CR>==gi", opts)
 keymap("n", "<A-k>", "<Esc>:m .-2<CR>==gi", opts)
 
 -- Insert --
 -- Press jk fast to enter
 -- keymap("i", "jk", "<ESC>", opts)
-keymap("i", "C-c", "<ESC>", opts)
-keymap("i", "C-e", "<end>", opts)
-keymap("i", "C-a", "<home>", opts)
-keymap("i", "C-u", "<C-g>u<C-u>", opts)
-keymap("i", "C-r", "<C-g>u<C-r>", opts)
+keymap("i", "<C-c>", "<ESC>", opts)
+keymap("i", "<C-e>", "<end>", opts)
+keymap("i", "<C-a>", "<home>", opts)
+keymap("i", "<C-u>", "<C-g>u<C-u>", opts)
+keymap("i", "<C-r>", "<C-g>u<C-r>", opts)
 
 -- Visual --
 -- Stay in indent mode
@@ -78,8 +73,10 @@ keymap("v", "J", ":move '>+1<CR>gv-gv", opts)
 keymap("v", "K", ":move '<-2<CR>gv-gv", opts)
 -- keymap("v", "<A-j>", ":m .+1<CR>==", opts)
 -- keymap("v", "<A-k>", ":m .-2<CR>==", opts)
+-- keymap("v", "<M-j>", ":m .+1<CR>==", opts)
+-- keymap("v", "<M-k>", ":m .-2<CR>==", opts)
 
--- pasting without overwriting "register 
+-- pasting without overwriting "register
 -- keymap("v", "p", '"_dP', opts)
 
 -- Visual Block --
@@ -99,35 +96,33 @@ keymap("t", "<C-o>", "<C-\\><C-N>", term_opts)
 
 -- Custom
 keymap("n", "<esc><esc>", "<cmd>nohlsearch<cr>", opts)
-keymap("n", "<leader>l", "<cmd>nohlsearch<cr>", opts)
--- NOTE: the fact that tab and ctrl-i are the same is stupid
--- keymap("n", "<leader>bd", "<cmd>Bdelete!<CR>", opts)
--- keymap("n", "<leader>bd", "<cmd>Bwipeout<CR>", opts)
-keymap("n", "<leader>bd", "<Plug>Kwbd<CR>", opts)
+-- keymap("n", "<C-/>", "<cmd>nohlsearch<cr>", opts)
 keymap("n", "<F1>", ":e ~/.my_notes/<cr>", opts)
--- keymap("n", "<F3>", ":e .<cr>", opts)
+keymap("n", "<F3>", "<cmd>Telescope resume<cr>", opts)
 keymap("n", "<F4>", ":UndotreeToggle<cr>", opts)
--- keymap("n", "<F4>", "<cmd>Telescope resume<cr>", opts)
+keymap("n", "<leader>u", ":UndotreeToggle<cr>", opts)
 keymap("n", "<F5>", "<cmd>Telescope commands<CR>", opts)
-keymap(
-  "n",
-  "<F6>",
-  [[:echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<' . synIDattr(synID(line("."),col("."),0),"name") . "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">" . " FG:" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"fg#")<CR>]],
-  opts
-)
+-- keymap( "n", "<F6>",
+--   [[:echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<' . synIDattr(synID(line("."),col("."),0),"name") . "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">" . " FG:" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"fg#")<CR>]],
+--   opts
+-- )
 -- keymap("n", "<F7>", "<cmd>TSHighlightCapturesUnderCursor<cr>", opts)
 keymap("n", "<F8>", ":Vista!!<CR>", opts)
 keymap("n", "<space><space>", ":Vista finder<CR>", opts)
 -- keymap("n", "<F11>", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
 -- keymap("n", "<F12>", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
 keymap("v", "//", [[y/\V<C-R>=escape(@",'/\')<CR><CR>]], opts)
-keymap(
-  "n",
-  "<C-p>",
-  "<cmd>lua require('telescope.builtin').find_files(require('telescope.themes').get_dropdown{previewer = false})<cr>",
-  opts
-)
-keymap("n", "<leader><leader>", "<Cmd>lua require('telescope').extensions.frecency.frecency()<CR>", opts)
+-- keymap(
+--   "n",
+--   "<C-p>",
+--   "<cmd>lua require('telescope.builtin').git_files(require('telescope.themes').get_dropdown{previewer = false})<cr>",
+--   opts
+-- )
+keymap( "n", "<C-p>", "<cmd>lua require('telescope.builtin').git_files()<cr>", opts)
+vim.keymap.set("n",
+               "<leader><leader>",
+               "<Cmd>lua require('telescope').extensions.frecency.frecency()<CR>",
+               { desc = 'Find (F)Recent Files', silent = true })
 keymap("n", "<C-t>", "<cmd>lua vim.lsp.buf.document_symbol()<cr>", opts)
 -- keymap("n", "<C-z>", "<cmd>ZenMode<cr>", opts)
 keymap("n", "<c-n>", ":e ~/.my_notes/<cr>", opts)
@@ -147,7 +142,7 @@ vim.api.nvim_set_keymap("n", "=", "<Plug>(choosewin)", opts)
 
 vim.api.nvim_set_keymap("n", "<leader>json", ":%!python -m json.tool<CR>", opts) -- Formatting a JSON file
 vim.api.nvim_set_keymap("n", "<C-j>", "i<CR><ESC>", opts) -- Formatting a JSON file
-vim.api.nvim_set_keymap("n", "<leader>spell", ":set spell!<CR>", opts)
-vim.api.nvim_set_keymap("n", "<leader>wrap", ":set wrap!<CR>", opts)
 vim.api.nvim_set_keymap("n",  "<C-h>", "<cmd>SidewaysLeft<CR>", opts)
 vim.api.nvim_set_keymap("n",  "<C-l>", "<cmd>SidewaysRight<CR>", opts)
+-- vim.api.nvim_set_keymap("n", "<leader>spell", ":set spell!<CR>", opts)
+-- vim.api.nvim_set_keymap("n", "<leader>wrap", ":set wrap!<CR>", opts)

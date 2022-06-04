@@ -1,9 +1,9 @@
-local dap_status_ok, dap = pcall(require, "dap")
+local dap_status_ok, dap = pcall(require"dap")
 if not dap_status_ok then
 	return
 end
 
-local dap_ui_status_ok, dapui = pcall(require, "dapui")
+local dap_ui_status_ok, dapui = pcall(require"dapui")
 if not dap_ui_status_ok then
 	return
 end
@@ -35,9 +35,9 @@ dapui.setup {
     position = "right", -- Can be "left", "right", "top", "bottom"
   },
   tray = {
-    elements = {},
-    -- elements = { "repl" },
-    -- size = 10,
+    -- elements = {},
+    elements = { "repl" },
+    size = 10,
     -- position = "bottom", -- Can be "left", "right", "top", "bottom"
   },
   floating = {
@@ -58,9 +58,93 @@ vim.fn.sign_define('DapBreakpoint', {text=icons.ui.Bug, texthl='DiagnosticSignEr
 dap.listeners.after.event_initialized["dapui_config"] = function()
   dapui.open()
 end
+
 dap.listeners.before.event_terminated["dapui_config"] = function()
   dapui.close()
 end
+
 dap.listeners.before.event_exited["dapui_config"] = function()
   dapui.close()
 end
+
+-- Settings for nvim-dap-python:
+local dap_python_status_ok, dap_python = pcall(require"dap-python")
+if not dap_python_status_ok then
+	return
+end
+
+-- NOTE: remember to pip install debugpy here vvv.
+dap_python.setup('~/miniconda3/envs/neovim/bin/python')
+table.insert(require('dap').configurations.python,
+  {
+    {
+      name = "server",
+      type = "python",
+      request = "launch",
+      module = "benchmarking_server.server"
+    },
+    {
+      name = "Celery low",
+      type = "python",
+      request = "launch",
+      module = "celery",
+      args = {
+        "-A",
+        "benchmarking_server.app_definition.celery",
+        "worker",
+        "-E",
+        "-n",
+        "bms_low",
+        "-Q",
+        "bms_low",
+        "-l",
+        "INFO",
+        "-c",
+        "1",
+        "--without-gossip",
+        "--without-mingle",
+        "--concurrency",
+        "1",
+        "--pool",
+        "solo"
+      }
+    },
+    {
+      name = "Celery high",
+      type = "python",
+      request = "launch",
+      module = "celery",
+      args = {
+        "-A",
+        "benchmarking_server.app_definition.celery",
+        "worker",
+        "-B",
+        "-E",
+        "-n",
+        "bms_high",
+        "-Q",
+        "bms_high",
+        "-l",
+        "INFO",
+        "-c",
+        "1",
+        "--without-gossip",
+        "--without-mingle",
+        "--concurrency",
+        "1",
+        "--pool",
+        "solo"
+      }
+    },
+    {
+      type = 'python',
+      request = 'launch',
+      name = 'My custom launch configuration',
+      program = '${file}',
+      -- ... more options, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings
+    }})
+
+-- See how to properly integrate these into whichkey:
+-- nnoremap <silent> <leader>dn :lua require('dap-python').test_method()<CR>
+-- nnoremap <silent> <leader>df :lua require('dap-python').test_class()<CR>
+-- vnoremap <silent> <leader>ds <ESC>:lua require('dap-python').debug_selection()<CR>

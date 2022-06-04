@@ -35,7 +35,7 @@ cmp.setup {
     ["<C-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
     ["<C-d>"] = cmp.mapping(cmp.mapping.scroll_docs(1), { "i", "c" }),
     -- ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
+    ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
     -- ["<C-y>"] = cmp.config.disable, -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
     ["<C-e>"] = cmp.mapping {
       i = cmp.mapping.abort(),
@@ -89,14 +89,8 @@ cmp.setup {
         path = "[Path]",
         buffer = "[Buffer]",
         spell = "[ABC]",
+        omni = "[Omni]",
         emoji = "[Emoji]",
-
-        -- nvim_lsp = "",
-        -- nvim_lua = "",
-        -- luasnip = "",
-        -- buffer = "",
-        -- path = "",
-        -- emoji = "",
       })[entry.source.name]
       return vim_item
     end,
@@ -108,6 +102,7 @@ cmp.setup {
     { name = "path" },
     { name = "buffer" },
     { name = "spell" },
+    { name = "omni" },
     { name = "emoji" },
   },
   confirm_opts = {
@@ -125,7 +120,7 @@ cmp.setup {
   -- 	border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
   -- },
   experimental = {
-    ghost_text = true,
+    ghost_text = false,
     -- native_menu = false,
   },
 }
@@ -146,6 +141,7 @@ cmp.setup.cmdline(':', {
   })
 })
 
+
 -- -- Trying out also filling omnifunc:
 -- _G.vimrc = _G.vimrc or {}
 -- _G.vimrc.cmp = _G.vimrc.cmp or {}
@@ -162,7 +158,7 @@ cmp.setup.cmdline(':', {
 --   cmp.complete({
 --     config = {
 --       sources = {
---         { name = 'vsnip' }
+--         { name = 'luasnip' }
 --       }
 --     }
 --   })
