@@ -1,10 +1,12 @@
 local status_ok, lualine = pcall(require, "lualine")
 if not status_ok then
+  vim.notify('Failed to require "lualine"...')
   return
 end
 
 local status_gps_ok, gps = pcall(require, "nvim-gps")
 if not status_gps_ok then
+  vim.notify('Failed to require "nvim-gps"...')
   return
 end
 

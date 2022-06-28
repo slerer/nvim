@@ -1,35 +1,14 @@
 -- following options are the default
 -- each of these are documented in `:help nvim-tree.OPTION_NAME`
-vim.g.nvim_tree_icons = {
-  default = "",
-  symlink = "",
-  git = {
-    unstaged = "",
-    staged = "S",
-    unmerged = "",
-    renamed = "➜",
-    deleted = "",
-    untracked = "U",
-    ignored = "◌",
-  },
-  folder = {
-    -- arrow_open = " ",
-    -- arrow_closed = "",
-    default = "",
-    open = "",
-    empty = "",
-    empty_open = "",
-    symlink = "",
-  },
-}
-
 local status_ok, nvim_tree = pcall(require, "nvim-tree")
 if not status_ok then
+  vim.notify('Failed to require "nvim-tree"...')
   return
 end
 
 local config_status_ok, nvim_tree_config = pcall(require, "nvim-tree.config")
 if not config_status_ok then
+  vim.notify('Failed to require "nvim-tree.config"...')
   return
 end
 
@@ -43,17 +22,19 @@ nvim_tree.setup {
   --   enable = false,
   -- },
   -- disable_netrw = true,
-  -- hijack_netrw = true,
+  hijack_netrw = true,
   -- open_on_setup = false,
   ignore_ft_on_setup = {
+    "help",
     "startify",
     "dashboard",
     "alpha",
   },
   -- auto_close = true,
   -- open_on_tab = false,
-  -- hijack_cursor = false,
-  update_cwd = true,
+  hijack_cursor = true,
+  -- respect_buf_cwd = true,
+  -- update_cwd = true,
   -- update_to_buf_dir = {
   --   enable = true,
   --   auto_open = true,
@@ -63,6 +44,35 @@ nvim_tree.setup {
   -- --   question
   -- --   warning
   -- --   lightbulb
+  renderer = {
+    highlight_git = true,
+    highlight_opened_files = "all",
+    icons = {
+      glyphs = {
+        default = "",
+        symlink = "",
+        git = {
+          unstaged = "",
+          staged = "S",
+          unmerged = "",
+          renamed = "➜",
+          deleted = "",
+          untracked = "U",
+          ignored = "◌",
+        },
+        folder = {
+          arrow_closed = "",
+          arrow_open = "",
+          default = "",
+          open = "",
+          empty = "",
+          empty_open = "",
+          symlink = "",
+          symlink_open = "",
+        },
+      },
+    },
+  },
   diagnostics = {
     enable = true,
     icons = {
@@ -74,7 +84,7 @@ nvim_tree.setup {
   },
   update_focused_file = {
     enable = true,
-    update_cwd = true,
+    update_root = true,
     ignore_list = {},
   },
   -- system_open = {
@@ -87,7 +97,7 @@ nvim_tree.setup {
   -- },
   git = {
     enable = true,
-    ignore = true,
+    ignore = false,
     timeout = 500,
   },
   view = {
@@ -107,6 +117,10 @@ nvim_tree.setup {
     number = false,
     relativenumber = false,
   },
+  filesystem_watchers = {
+    enable = true,
+    interval = 250,
+  }
   -- trash = {
   --   cmd = "trash",
   --   require_confirm = true,

@@ -1,5 +1,6 @@
 local status_ok, context = pcall(require, "treesitter-context")
 if not status_ok then
+  vim.notify('Failed to require "treesitter-context"...')
 	return
 end
 
@@ -16,10 +17,10 @@ context.setup{
             'class',
             'function',
             'method',
-            -- 'for', -- These won't appear in the context
-            -- 'while',
-            -- 'if',
-            -- 'switch',
+            'for',
+            'while',
+            'if',
+            -- 'switch', -- These won't appear in the context
             -- 'case',
         },
     },

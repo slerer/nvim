@@ -1,5 +1,6 @@
 local status_ok, which_key = pcall(require, "which-key")
 if not status_ok then
+  vim.notify('Failed to require "which-key"...')
   return
 end
 
@@ -100,23 +101,7 @@ local m_opts = {
 -- mappings for NORMAL mode starting with <leader>
 local mappings = {
   ["a"] = { "<cmd>Alpha<cr>", "Alpha" },
-  -- ["b"] = {
-  --   "<cmd>lua require('telescope.builtin').buffers(require('telescope.themes').get_dropdown{previewer = false})<cr>",
-  --   "Buffers",
-  -- },
-  ["e"] = { "<cmd>NvimTreeToggle<cr>", "Explorer" },
-  -- ["h"] = { "<cmd>HopWord<CR>", "Hop word" },
-  -- ["/"] = { "<cmd>HopPattern<CR>", "Hop /" },
-  -- Trying the multi-window variants that were introduced lately:
-  ["h"] = { "<cmd>HopWordMW<CR>", "Hop word" },
-  ["/"] = { "<cmd>HopPatternMW<CR>", "Hop /" },
-  ["P"] = { "<cmd>lua require('telescope').extensions.projects.projects()<cr>", "Projects" },
-  ["z"] = { "<cmd>ZenMode<cr>", "Zen" },
-  ["gy"] = "Link",
 
--- keymap("n", "<leader>bd", "<cmd>Bdelete!<CR>", opts)
--- keymap("n", "<leader>bd", "<cmd>Bwipeout<CR>", opts)
--- keymap("n", "<leader>bd", "<Plug>Kwbd<CR>", opts)
   b = {
     name = "Buffers",
     -- d = { "<cmd>Bdelete!<CR>", "Delete buffer" },
@@ -128,19 +113,30 @@ local mappings = {
     name = "Debug",
     b = { "<cmd>lua require'dap'.toggle_breakpoint()<cr>", "Breakpoint" },
     c = { "<cmd>lua require'dap'.continue()<cr>", "Continue" },
-    i = { "<cmd>lua require'dap'.step_into()<cr>", "Into" },
-    o = { "<cmd>lua require'dap'.step_over()<cr>", "Over" },
-    O = { "<cmd>lua require'dap'.step_out()<cr>", "Out" },
-    r = { "<cmd>lua require'dap'.repl.toggle()<cr>", "Repl" },
-    l = { "<cmd>lua require'dap'.run_last()<cr>", "Last" },
-    u = { "<cmd>lua require'dapui'.toggle()<cr>", "UI" },
-    x = { "<cmd>lua require'dap'.terminate()<cr>", "Exit" },
+    i = { "<cmd>lua require'dap'.step_into()<cr>", "Step Into" },
+    o = { "<cmd>lua require'dap'.step_over()<cr>", "Step Over" },
+    O = { "<cmd>lua require'dap'.step_out()<cr>", "Step Out" },
+    r = { "<cmd>lua require'dap'.repl.toggle()<cr>", "Toggle Repl" },
+    s = { "<cmd>lua require'dap-python'.debug_selection()<cr>", "Debug Selection" },
+    l = { "<cmd>lua require'dap'.run_last()<cr>", "Run last" },
+    p = { "<cmd>lua require'dap'.pause()<cr>", "Pause thread" },
+    t = { "<cmd>lua require'dap'.terminate()<cr>", "Terminate" },
+    x = { "<cmd>lua require'dap'.terminate()<cr>", "Terminate" },
+    e = { "<cmd>lua require'dapui'.eval()<cr>", "Eval" },
+    u = { "<cmd>lua require'dapui'.toggle()<cr>", "Toggle UI" },
+    S = { "<cmd>lua require'dapui'.float_element('scopes')<cr>", "Float Scopes" },
+    R = { "<cmd>lua require'dapui'.float_element('repl')<cr>", "Float REPL" },
+    C = { "<cmd>lua require'dapui'.float_element('console')<cr>", "Float Console" },
+    W = { "<cmd>lua require'dapui'.float_element('watches')<cr>", "Float Watches" },
+    B = { "<cmd>lua require'dapui'.float_element('breakpoints')<cr>", "Float Breakpoints" },
+    F = { "<cmd>lua require'dapui'.float_element()<cr>", "Open Float" },
   },
+
+  -- ["e"] = { "<cmd>NvimTreeToggle<cr>", "Project Tree" },
+  -- ["e"] = { "<cmd>NvimTreeFocus<cr>", "Project Tree" },
+  ["e"] = { "<cmd>NvimTreeFindFileToggle<cr>", "Project Tree" },
   -- nnoremap <silent> <leader>B :lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>
   -- nnoremap <silent> <leader>lp :lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>
-  -- require("dapui").open()
-  -- require("dapui").close()
-  -- require("dapui").toggle()
 
   f = {
     name = "Find",
@@ -151,7 +147,7 @@ local mappings = {
     f = { "<cmd>lua require('telescope.builtin').find_files()<cr>", "Find files in CWD" },
     s = { "<cmd>Telescope grep_string theme=ivy<cr>", "Grep word under cursor" },
     g = { "<cmd>Telescope live_grep theme=ivy<cr>", "Live Grep" },
-    G = { "<cmd>Telescope live_grep_raw theme=ivy<cr>", "Live Grep Raw" },
+    G = { "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args() theme=ivy<cr>", "Live Grep Args" },
     h = { "<cmd>Telescope help_tags<cr>", "Help" },
     l = { "<cmd>Telescope resume<cr>", "Last Search" },
     -- m = { "<cmd>lua require('telescope').extensions.media_files.media_files()<cr>", "Media" },
@@ -164,7 +160,7 @@ local mappings = {
   },
 
   g = {
-    name = "Git",
+    name = "+Git",
     g = { "<cmd>lua _LAZYGIT_TOGGLE()<CR>", "Lazygit" },
     j = { "<cmd>lua require 'gitsigns'.next_hunk()<cr>", "Next Hunk" },
     k = { "<cmd>lua require 'gitsigns'.prev_hunk()<cr>", "Prev Hunk" },
@@ -179,15 +175,73 @@ local mappings = {
     b = { "<cmd>Telescope git_branches<cr>", "Checkout branch" },
     c = { "<cmd>Telescope git_commits<cr>", "Checkout commit" },
     d = { "<cmd>Gitsigns diffthis HEAD<cr>", "Diff" },
-    G = { name = "Gist",
-          a = { "<cmd>Gist -b -a<cr>", "Create Anon" },
-          d = { "<cmd>Gist -d<cr>", "Delete" },
-          f = { "<cmd>Gist -f<cr>", "Fork" },
-          g = { "<cmd>Gist -b<cr>", "Create" },
-          l = { "<cmd>Gist -l<cr>", "List" },
-          p = { "<cmd>Gist -b -p<cr>", "Create Private" },
+    G = { name = "+Gist",
+      a = { "<cmd>Gist -b -a<cr>", "Create Anon" },
+      d = { "<cmd>Gist -d<cr>", "Delete" },
+      f = { "<cmd>Gist -f<cr>", "Fork" },
+      g = { "<cmd>Gist -b<cr>", "Create" },
+      l = { "<cmd>Gist -l<cr>", "List" },
+      p = { "<cmd>Gist -b -p<cr>", "Create Private" },
+    },
+    C = { name = "+Conflict",
+      o = { "<cmd>ConflictMarkerOurselves<cr>", "" },
+      t = { "<cmd>ConflictMarkerThemselves<cr>", "" },
+      b = { "<cmd>ConflictMarkerBoth<cr>", "" },
+    },
+    h = {
+      name = "+Github",
+      c = {
+        name = "+Commits",
+        c = { "<cmd>GHCloseCommit<cr>", "Close" },
+        e = { "<cmd>GHExpandCommit<cr>", "Expand" },
+        o = { "<cmd>GHOpenToCommit<cr>", "Open To" },
+        p = { "<cmd>GHPopOutCommit<cr>", "Pop Out" },
+        z = { "<cmd>GHCollapseCommit<cr>", "Collapse" },
+      },
+      i = {
+        name = "+Issues",
+        p = { "<cmd>GHPreviewIssue<cr>", "Preview" },
+      },
+      l = {
+        name = "+Litee",
+        t = { "<cmd>LTPanel<cr>", "Toggle Panel" },
+      },
+      r = {
+        name = "+Review",
+        b = { "<cmd>GHStartReview<cr>", "Begin" },
+        c = { "<cmd>GHCloseReview<cr>", "Close" },
+        d = { "<cmd>GHDeleteReview<cr>", "Delete" },
+        e = { "<cmd>GHExpandReview<cr>", "Expand" },
+        s = { "<cmd>GHSubmitReview<cr>", "Submit" },
+        z = { "<cmd>GHCollapseReview<cr>", "Collapse" },
+      },
+      p = {
+        name = "+Pull Request",
+        c = { "<cmd>GHClosePR<cr>", "Close" },
+        d = { "<cmd>GHPRDetails<cr>", "Details" },
+        e = { "<cmd>GHExpandPR<cr>", "Expand" },
+        o = { "<cmd>GHOpenPR<cr>", "Open" },
+        p = { "<cmd>GHPopOutPR<cr>", "PopOut" },
+        r = { "<cmd>GHRefreshPR<cr>", "Refresh" },
+        t = { "<cmd>GHOpenToPR<cr>", "Open To" },
+        z = { "<cmd>GHCollapsePR<cr>", "Collapse" },
+      },
+      t = {
+        name = "+Threads",
+        c = { "<cmd>GHCreateThread<cr>", "Create" },
+        n = { "<cmd>GHNextThread<cr>", "Next" },
+        t = { "<cmd>GHToggleThread<cr>", "Toggle" },
+      },
     },
   },
+
+  -- ["gy"] = "Link",
+
+  -- ["h"] = { "<cmd>HopWord<CR>", "Hop word" },
+  -- ["/"] = { "<cmd>HopPattern<CR>", "Hop /" },
+  -- Trying the multi-window variants that were introduced lately:
+  ["h"] = { "<cmd>HopWordMW<CR>", "Hop word" },
+  ["/"] = { "<cmd>HopPatternMW<CR>", "Hop /" },
 
   l = {
     name = "LSP",
@@ -205,12 +259,26 @@ local mappings = {
     o = { "<cmd>SymbolsOutline<cr>", "Outline Symbols" },
     t = { "<cmd>AerialToggle<cr>", "Aerial Tree" },
     -- Maybe I should change vvv to quickfix? Still need to see which one I'm using more...
-    q = { "<cmd>lua vim.diagnostic.setloclist()<cr>", "Quickfix" },
-    Q = { "<cmd>TroubleToggle loclist<cr>", "Quickfix" },
-    r = { "<cmd>lua vim.lsp.buf.rename()<cr>", "Rename" },
+    q = { "<cmd>lua vim.diagnostic.setloclist()<cr>", "Quickfix (BQF)" },
+    Q = { "<cmd>TroubleToggle loclist<cr>", "Locklist (Trouble)" },
+    r = { "<cmd>lua vim.lsp.buf.rename()<cr>", "Rename (LSP)" },
     R = { "<cmd>TroubleToggle lsp_references<cr>", "References" },
     s = { "<cmd>Telescope lsp_document_symbols<cr>", "Document Symbols" },
     S = { "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>", "Workspace Symbols" },
+  },
+
+  n = {
+    name = "Neotest",
+    a = { '<cmd>lua require("neotest").run.attach()<cr>', "Attach to the nearest test" },
+    d = { '<cmd>lua require("neotest").run.run({strategy = "dap"})<cr>', "Debug the nearest test" },
+    r = { '<cmd>lua require("neotest").run.run()<cr>', "Run the nearest test" },
+    f = { '<cmd>lua require("neotest").run.run(vim.fn.expand("%"))<cr>', "Run the current file" },
+    o = { '<cmd>lua require("neotest").output.open({short = true})<cr>', "open float with tests' output" },
+    O = { '<cmd>lua require("neotest").output.open()<cr>', "open float with single test' output" },
+    -- o = { '<cmd>lua require("neotest").output.open({enter = true, short = true})<cr>', "open float with tests' output" },
+    -- O = { '<cmd>lua require("neotest").output.open({enter = true})<cr>', "open float with single test' output" },
+    s = { '<cmd>lua require("neotest").run.stop()<cr>', "Stop the nearest test" },
+    t = { '<cmd>lua require("neotest").summary.toggle()<cr>', "Toggle Summary" },
   },
 
   o = {
@@ -234,9 +302,11 @@ local mappings = {
     u = { "<cmd>PackerUpdate<cr>", "Update" },
   },
 
+  ["P"] = { "<cmd>lua require('telescope').extensions.projects.projects()<cr>", "Projects" },
+
   r = {
     name = "Replace",
-    n = { "<cmd>lua vim.lsp.buf.rename()<cr>", "LSP Rename" },
+    -- n = { "<cmd>lua require('nvim-treesitter-refactor.smart_rename').smart_rename()", "Rename (treesitter-refactor)" },
     r = { "<cmd>lua require('spectre').open()<cr>", "Replace" },
     w = { "<cmd>lua require('spectre').open_visual({select_word=true})<cr>", "Replace Word" },
     f = { "<cmd>lua require('spectre').open_file_search()<cr>", "Replace Buffer" },
@@ -295,13 +365,17 @@ local mappings = {
     c = { "<cmd>Vista!<cr>", "Close Vista window" },
     t = { "<cmd>Vista!!<cr>", "Toggle Vista window" },
     f = { "<cmd>Vista focus<cr>", "Toggle focus" },
-  }
+  },
+
+  ["z"] = { "<cmd>ZenMode<cr>", "Zen" },
 }
 
 -- mappings for VISUAL mode starting with <leader>
 local vmappings = {
   ["/"] = { '<ESC><CMD>lua require("Comment.api").toggle_linewise_op(vim.fn.visualmode())<CR>', "Comment" },
   s = { "<esc><cmd>'<,'>SnipRun<cr>", "Run range" },
+  e = { "<cmd>lua require('dapui').eval()<cr>", "Eval selection" },
+  -- d = { "<esc><cmd>lua require('dap-python').debug_selection()<cr>", "Debug range" },
 }
 
 -- general mappings for "Marks" of all sorts in NORMAL mode starting with 'm' (no <leader>).
@@ -331,6 +405,7 @@ local m_mappings = {
   },
 }
 
+vim.keymap.set("n", "<leader>rn", function() return ":IncRename " .. vim.fn.expand("<cword>") end, { expr = true , desc = 'Incremental Rename'})
 which_key.setup(setup)
 which_key.register(mappings, opts)
 which_key.register(vmappings, vopts)

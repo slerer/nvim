@@ -1,5 +1,6 @@
 local status_ok, notify = pcall(require, "notify")
 if not status_ok then
+  vim.notify('Failed to require "notify"...')
   return
 end
 

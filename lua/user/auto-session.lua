@@ -1,6 +1,7 @@
 do
   local status_ok, auto_session = pcall(require, "auto-session")
   if not status_ok then
+  vim.notify('Failed to require "auto-session"...')
     return
   end
 
@@ -27,6 +28,7 @@ vim.o.sessionoptions="blank,buffers,curdir,help,tabpages,winsize,winpos,terminal
 do
   local status_ok, session_lens = pcall(require, "session-lens")
   if not status_ok then
+  vim.notify('Failed to require "session-lens"...')
     return
   end
 

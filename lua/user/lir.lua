@@ -1,5 +1,6 @@
 local status_ok, lir = pcall(require, "lir")
 if not status_ok then
+  vim.notify('Failed to require "lir"...')
   return
 end
 

@@ -1,5 +1,6 @@
-local keymap_amend_status_ok, _ = pcall(require"keymap-amend")
+local keymap_amend_status_ok, _ = pcall(require, "keymap-amend")
 if not keymap_amend_status_ok then
+  vim.notify('Failed to require "keymap-amend"...')
 	return
 end
 

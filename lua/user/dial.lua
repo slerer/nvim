@@ -1,5 +1,6 @@
 local status_ok, dial_config = pcall(require, "dial.config")
 if not status_ok then
+  vim.notify('Failed to require "dial.config"...')
   return
 end
 

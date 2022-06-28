@@ -1,5 +1,6 @@
 local status_ok, alpha = pcall(require, "alpha")
 if not status_ok then
+  vim.notify('Failed to require "alpha"...')
   return
 end
 
@@ -29,10 +30,10 @@ dashboard.section.header.val = {
 
 dashboard.section.buttons.val = {
   dashboard.button("r", icons.ui.History .. " Recent files", ":Telescope oldfiles <CR>"),
-  dashboard.button("f", icons.documents.Files .. " Find file", ":Telescope find_files <CR>"),
+  dashboard.button("f", icons.documents.Files .. " Find file in tree", ":Telescope find_files <CR>"),
   dashboard.button("p", icons.git.Repo .. " Find project", ":lua require('telescope').extensions.projects.projects()<CR>"),
-  dashboard.button("s", icons.ui.SignIn .. " Find Session", ":Telescope sessions save_current=false <CR>"),
-  dashboard.button("t", icons.ui.List .. " Find text", ":Telescope live_grep <CR>"),
+  dashboard.button("s", icons.ui.SignIn .. " Find Session", ":Telescope session-lens search_session<CR>"),
+  dashboard.button("t", icons.ui.List .. " Find text in tree", ":Telescope live_grep <CR>"),
   dashboard.button("e", icons.ui.NewFile .. " New file", ":ene <BAR> startinsert <CR>"),
   dashboard.button("c", icons.ui.Gear .. " Config", ":e ~/.config/nvim/init.lua <CR>"),
   dashboard.button("u", icons.ui.Package .. " Update plugins" , ":PackerSync<CR>"),

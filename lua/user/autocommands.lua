@@ -21,7 +21,8 @@ do
   vim.api.nvim_create_autocmd({ "TextYankPost" }, {
     group = group,
     callback = function()
-      vim.highlight.on_yank { higroup = "Visual", timeout = 200 }
+      -- vim.highlight.on_yank { higroup = "Visual", timeout = 200 }
+      vim.highlight.on_yank { higroup = "IncSearch", timeout = 200 }
     end,
   })
 end
@@ -66,6 +67,18 @@ end
 do
   local group = vim.api.nvim_create_augroup("my_buffers_stuff", { clear = true })
 
+  -- vim.api.nvim_create_autocmd("BufWinEnter", {
+  --   callback = function()
+  --     local buf = tonumber(vim.fn.expand("<abuf>"))
+  --     local winbar = ""
+  --     if vim.api.nvim_buf_get_option(buf, "buftype") == "" then
+  --       winbar = "%!v:lua.WinBar()"
+  --     end
+  --     local win = vim.fn.bufwinid(buf)
+  --     vim.api.nvim_win_set_option(win, "winbar", winbar)
+  --   end,
+  -- })
+
   vim.api.nvim_create_autocmd({ "BufEnter" }, {
     group = group,
     callback = function()
@@ -87,7 +100,7 @@ do
   })
 
   vim.api.nvim_create_autocmd({ "BufWritePost" }, {
-    pattern = { "*.java" },
+    pattern = { "*.py" },
     callback = function()
       vim.lsp.codelens.refresh()
     end,
@@ -110,12 +123,12 @@ do
   -- })
 
   -- Kills the commands' editor in case you press 'q:' in normal mode. I don't think I like this.
-  vim.api.nvim_create_autocmd({ "CmdWinEnter" }, {
-    group = group,
-    callback = function()
-      vim.cmd "quit"
-    end,
-  })
+  -- vim.api.nvim_create_autocmd({ "CmdWinEnter" }, {
+  --   group = group,
+  --   callback = function()
+  --     vim.cmd "quit"
+  --   end,
+  -- })
 end
 
 do

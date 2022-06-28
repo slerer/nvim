@@ -1,6 +1,6 @@
 local shade_status_ok, shade = pcall(require"shade")
 if not shade_status_ok then
-  print("shade failed!")
+  vim.notify('Failed to require "shade"...')
 	return
 end
 

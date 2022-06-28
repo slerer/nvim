@@ -23,6 +23,7 @@ end
 
 -- ultest
 let.g.ultest_use_pty = 1
+let.g.ultest_deprecation_notice = 0
 
 -- mbbil/undotree
 let.g.undotree_SetFocusWhenToggle = 1
@@ -43,7 +44,8 @@ let.g.vista_finder_alternative_executives = 'ctags'
 
 -- in millisecond, used for both CursorHold and CursorHoldI,
 -- use updatetime instead if not defined
-let.g.cursorhold_updatetime = 100
+-- let.g.cursorhold_updatetime = 100
+let.g.cursorhold_updatetime = 50
 
 let.g.sphinx_default_role = 'any'
 let.g.sphinx_html_output_dirs = { '_build/html', 'build/html', '../_build/html', '../build/html', '_build/dirhtml', 'build/dirhtml', '../_build/dirhtml', '../build/dirhtml', }
@@ -64,6 +66,8 @@ if pcall(require, "plenary") then
     RELOAD(name)
     return require(name)
   end
+else
+  vim.notify('Failed to require "telescope"...')
 end
 
 -- The function is called `T` for `termcodes`.

@@ -1,5 +1,6 @@
 local status_ok, _ = pcall(require, "nvim-gps")
 if not status_ok then
+  vim.notify('Failed to require "nvim-gps"...')
 	return
 end
 

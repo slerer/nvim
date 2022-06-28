@@ -1,5 +1,6 @@
 local status_ok, todo_comments = pcall(require, "todo-comments")
 if not status_ok then
+  vim.notify('Failed to require "todo-comments"...')
   return
 end
 
@@ -18,6 +19,13 @@ local note_green = '#10B981'
 -- WARN:
 -- PERF:
 
+
+-- HACK: #104 Invalid in command-line window
+local hl = require("todo-comments.highlight")
+local highlight_win = hl.highlight_win
+hl.highlight_win = function(win, force)
+	pcall(highlight_win, win, force)
+end
 
 todo_comments.setup {
   signs = true, -- show icons in the signs column

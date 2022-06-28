@@ -45,7 +45,8 @@ local options = {
   -- timeoutlen = 750,                        -- time to wait for a mapped sequence to complete (in milliseconds - was 100)
   timeoutlen = 120,                        -- time to wait for a mapped sequence to complete (in milliseconds - was 100)
   ttimeoutlen = 250,
-  updatetime = 300,                        -- faster completion (4000ms default)
+  -- updatetime = 150,                        -- faster completion (4000ms default)
+  updatetime = 4000,                        -- faster completion (4000ms default)
   expandtab = true,                        -- convert tabs to spaces
   shiftwidth = 2,                          -- the number of spaces inserted for each indentation (was 4)
   shiftround = true,
@@ -57,6 +58,7 @@ local options = {
   showbreak = "↪",                         -- string to put at the starting of wrapped lines
   list = true,                             -- show invisible characters like spaces enabled later via autocmd on certain filetypes
   pastetoggle = "<F2>",
+  -- winbar = "",
 }
 
 for k, v in pairs(options) do
@@ -71,15 +73,14 @@ set.wildignore = { "*.o", "*~", "*.pyc", "*pycache*", "__pycache__" }
 set.pumblend = 0
 set.wildmode = "longest:full:lastused"
 set.wildoptions = "pum"
-
-
 set.fillchars.eob=" "
-
 set.shortmess:append "c"
+vim.opt.listchars:append("tab:▸ ,trail:·,extends:❯,precedes:❮,nbsp:·")
+-- vim.opt.listchars:append("eol:↴")
+vim.opt.whichwrap:append("<,>,[,],h,l")
+vim.opt.iskeyword:append("-") -- Adding these charcters for definition of 'word'
+vim.opt.iskeyword:append("_")
+
 -- executing via vim.cmd, because we still don't have the lua API (AFAIK):
-vim.cmd "set whichwrap+=<,>,[,],h,l"
 vim.cmd "set nojoinspaces" -- prevents two spaces after punctuation on join
 vim.cmd "set nofsync" -- allows OS to decide when to flush to disk
-vim.cmd [[ set listchars=tab:▸\ ,trail:·,extends:❯,precedes:❮,nbsp:· ]]
-vim.cmd [[ set iskeyword+=- ]] -- Adding these charcters for definition of 'word'
-vim.cmd [[ set iskeyword+=_ ]]

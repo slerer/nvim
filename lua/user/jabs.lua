@@ -1,5 +1,6 @@
 local status_ok, jabs = pcall(require, "jabs")
 if not status_ok then
+  vim.notify('Failed to require "jabs"...')
   return
 end
 

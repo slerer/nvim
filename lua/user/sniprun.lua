@@ -1,5 +1,6 @@
 local status_ok, sniprun = pcall(require, "sniprun")
 if not status_ok then
+  vim.notify('Failed to require "sniprun"...')
 	return
 end
 

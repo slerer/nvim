@@ -1,10 +1,10 @@
-local trouble_status_ok, trouble = pcall(require"trouble")
+local trouble_status_ok, trouble = pcall(require, "trouble")
 if not trouble_status_ok then
+  vim.notify('Failed to require "trouble"...')
 	return
 end
 
-trouble.setup({
-})
+trouble.setup({})
 
 
 -- vim.api.nvim_create_user_command(

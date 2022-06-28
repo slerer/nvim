@@ -1,5 +1,6 @@
 local status_ok, telescope = pcall(require, "telescope")
 if not status_ok then
+  vim.notify('Failed to require "telescope"...')
   return
 end
 
@@ -184,9 +185,11 @@ telescope.setup {
   },
 }
 
+telescope.load_extension('cder')
+
 telescope.load_extension('harpoon')
 
-telescope.load_extension "ui-select"
+telescope.load_extension('ui-select')
 
 --
 telescope.load_extension('hop')
@@ -195,7 +198,7 @@ telescope.load_extension('hop')
 -- telescope.load_extension('neoclip')
 
 --
-telescope.load_extension("lazygit")
+telescope.load_extension('lazygit')
 
 --
 telescope.load_extension('env')
@@ -219,12 +222,8 @@ telescope.load_extension "fzf"
 -- https://github.com/nvim-telescope/telescope-frecency.nvim
 telescope.load_extension "frecency"
 
--- https://github.com/nvim-telescope/telescope-project.nvim
-telescope.load_extension "project"
--- lua require'telescope'.extensions.project.project{} to activate picker
-
--- https://github.com/nvim-telescope/telescope-rg.nvim
-telescope.load_extension "live_grep_raw"
+-- https://github.com/nvim-telescope/telescope-live-grep-args.nvim
+telescope.load_extension "live_grep_args"
 
 -- https://github.com/nvim-telescope/telescope-dap.nvim
 telescope.load_extension('dap')
@@ -240,3 +239,5 @@ telescope.load_extension('dap')
 -- require'telescope'.extensions.dap.list_breakpoints{}
 -- require'telescope'.extensions.dap.variables{}
 -- require'telescope'.extensions.dap.frames{}
+
+require("telescope").load_extension("scratch")

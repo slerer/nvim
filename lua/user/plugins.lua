@@ -28,6 +28,7 @@ vim.api.nvim_create_autocmd("BufWritePost", { pattern = "plugins.lua", command =
 -- Use a protected call so we don't error out on first use
 local status_ok, packer = pcall(require, "packer")
 if not status_ok then
+  vim.notify('Failed to require "packer"...')
   return
 end
 
@@ -46,6 +47,7 @@ packer.init {
 return packer.startup(function(use)
   -- My plugins here
   use "wbthomason/packer.nvim" -- Have packer manage itself
+  use "anuvyklack/nvim-keymap-amend"
   use "nvim-lua/popup.nvim" -- An implementation of the Popup API from vim in Neovim
   use "nvim-lua/plenary.nvim" -- Useful lua functions used by lots of plugins
   use "windwp/nvim-autopairs" -- Autopairs, integrates with both cmp and treesitter
@@ -58,7 +60,7 @@ return packer.startup(function(use)
   }
   use { "kyazdani42/nvim-tree.lua" }
   use "tamago324/lir.nvim"
-  use "kosayoda/nvim-lightbulb"
+  -- use "kosayoda/nvim-lightbulb"
   use "akinsho/bufferline.nvim"
   use "moll/vim-bbye"
   -- use "windwp/windline.nvim" -- giving lualine a chance...
@@ -107,7 +109,6 @@ return packer.startup(function(use)
   -- need to decide what to use ^^^
   -- end of fzf fun --
 
-  use "ThePrimeagen/harpoon"
   use "MattesGroeger/vim-bookmarks"
   -- use "Mephistophiles/surround.nvim"
   use "tpope/vim-repeat"
@@ -158,6 +159,7 @@ return packer.startup(function(use)
           -- vim.cmd([[colorscheme vscode]])
         end,
   }
+  use {'lewis6991/github_dark.nvim'}
 
   -- cmp plugins
   use { "hrsh7th/nvim-cmp" }
@@ -168,11 +170,17 @@ return packer.startup(function(use)
   use { "hrsh7th/cmp-nvim-lsp" }
   use { "hrsh7th/cmp-emoji" }
   use { "hrsh7th/cmp-nvim-lua" }
+  use { 'hrsh7th/cmp-nvim-lsp-signature-help' }
   use { "f3fora/cmp-spell" }
   use { "hrsh7th/cmp-omni" }
+  use { "rcarriga/cmp-dap" }
+  use { "petertriho/cmp-git", requires = "nvim-lua/plenary.nvim" }
 
   -- snippets
-  use "L3MON4D3/LuaSnip" --snippet engine
+  use {
+    'L3MON4D3/LuaSnip',
+    -- after = 'nvim-cmp',
+  } --snippet engine
   use "rafamadriz/friendly-snippets" -- a bunch of snippets to use
   -- use "honza/vim-snippets"
 
@@ -185,35 +193,83 @@ return packer.startup(function(use)
   use "simrat39/symbols-outline.nvim"
   use "stevearc/aerial.nvim"
   --
-  use "ray-x/lsp_signature.nvim"
-  use "b0o/SchemaStore.nvim"
+  use({
+    "glepnir/lspsaga.nvim",
+    branch = "main",
+    config = function()
+      local saga = require("lspsaga")
 
-  use { "folke/trouble.nvim" }
-  -- use { "folke/trouble.nvim", cmd = "TroubleToggle", }
+      saga.init_lsp_saga({
+        -- your configuration
+      })
+    end,
+  })
+  -- use "ray-x/lsp_signature.nvim"
+  use "b0o/SchemaStore.nvim"
+  --
+  use { "stsewd/isort.nvim", run = ":UpdateRemotePlugins"}
+
   -- use "github/copilot.vim"
   use "RRethy/vim-illuminate"
   use{ "itchyny/vim-highlighturl" } -- Highlight URLs inside vim
   use { 'jdhao/whitespace.nvim' } -- show and trim trailing whitespaces
+  use { "smjonas/inc-rename.nvim", config = function() require("inc_rename").setup() end, }
   -- Java
   -- use "mfussenegger/nvim-jdtls"
 
+  -- DAP
+  use "mfussenegger/nvim-dap"
+  use "theHamsta/nvim-dap-virtual-text"
+  use "rcarriga/nvim-dap-ui"
+  use "mfussenegger/nvim-dap-python"
+  -- use "Pocco81/dap-buddy.nvim"  -- these two Pocco81 plug-ins used to assist with easy install of DAP adapters, but
+  -- are broken till further notice.
+  -- use "Pocco81/DAPInstall.nvim"
+  -- experimental:
+  use "HiPhish/debugpy.nvim"  -- :Debugpy module|program|attach <name> <args>
+
+  use { "rcarriga/vim-ultest",
+        requires = {"vim-test/vim-test"},
+        run = ":UpdateRemotePlugins" }
+  -- new plugin vvv from author of ^^^, still wonky but really nice.
+  -- TODO: add commands for Neotest commands.
+  use { -- TODO: need to setup support for debugging a test on-the-fly.
+    "rcarriga/neotest",
+    requires = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "antoinemadec/FixCursorHold.nvim",
+      "rcarriga/neotest-python",
+      "rcarriga/neotest-plenary",
+    }
+  }
+  use { "folke/trouble.nvim", requires = "kyazdani42/nvim-web-devicons" }
+  -- use { "onsails/diaglist.nvim" }
+
   -- Telescope
-  use "nvim-telescope/telescope.nvim"
-  use { "jvgrootveld/telescope-zoxide" }
-  use { "nvim-telescope/telescope-symbols.nvim" }
-  use { "nvim-telescope/telescope-dap.nvim" }
-  use { 'nvim-telescope/telescope-live-grep-raw.nvim' }
-  use { "tom-anders/telescope-vim-bookmarks.nvim" }
-  use { "nvim-telescope/telescope-media-files.nvim" }
-  use { "nvim-telescope/telescope-ui-select.nvim" }
-  use { "nvim-telescope/telescope-file-browser.nvim" }
+  use { "ThePrimeagen/harpoon" }
+  use { "nvim-telescope/telescope.nvim",
+    requires = {
+      { "zane-/cder.nvim" },
+      { "nvim-telescope/telescope-live-grep-args.nvim" },
+      { "jvgrootveld/telescope-zoxide" },
+      { "nvim-telescope/telescope-symbols.nvim" },
+      { "nvim-telescope/telescope-dap.nvim" },
+      { 'nvim-telescope/telescope-live-grep-args.nvim' },
+      { "tom-anders/telescope-vim-bookmarks.nvim" },
+      { "nvim-telescope/telescope-media-files.nvim" },
+      { "nvim-telescope/telescope-ui-select.nvim" },
+      { "nvim-telescope/telescope-file-browser.nvim" },
+      { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' },
+      { "nvim-telescope/telescope-frecency.nvim", requires = {"tami5/sqlite.lua"} },
+      { "LinArcX/telescope-env.nvim" },
+      { "shift-d/scratch.nvim" },
+    }
+  }
   -- use "nvim-telescope/telescope-fzy-native.nvim"
-  use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
-  use { "nvim-telescope/telescope-project.nvim" }
-  use { "nvim-telescope/telescope-frecency.nvim", requires = {"tami5/sqlite.lua"} }
-  use { "LinArcX/telescope-env.nvim" }
-  use { -- TODO: Add config file + read docs for this:
-    -- BUG: breaks yanking to "0 :(
+
+  use { -- TODO: read docs for this:
+    -- BUG: breaks yanking to "0 on some occasions :( - Fix this!!!
     "AckslD/nvim-neoclip.lua",
     requires = {
       {'tami5/sqlite.lua', module = 'sqlite'},
@@ -221,10 +277,6 @@ return packer.startup(function(use)
       {'nvim-telescope/telescope.nvim'},
       -- {'ibhagwan/fzf-lua'},
     },
-    config = function()
-      require('neoclip').setup()
-    end,
-    after = 'telescope.nvim',
   }
   use { 'nvim-telescope/telescope-hop.nvim' }
   -- use { 'nvim-telescope/telescope-hop.nvim', after = 'telescope.nvim' }
@@ -232,44 +284,53 @@ return packer.startup(function(use)
   -- Treesitter
   -- TODO: add 'after =' to the rest of the dependent on treesitter
   -- use { "nvim-treesitter/nvim-treesitter", event = 'BufEnter', run = ":TSUpdate" }
-  use { "nvim-treesitter/nvim-treesitter", run = ":lua pcall(vim.cmd, 'TSUpdate')" }
-  use "JoosepAlviste/nvim-ts-context-commentstring"
-  use { "p00f/nvim-ts-rainbow" }
+  use { "nvim-treesitter/nvim-treesitter",
+    run = ":lua pcall(vim.cmd, 'TSUpdate')",
+    requires = {
+      { "JoosepAlviste/nvim-ts-context-commentstring" },
+      { "p00f/nvim-ts-rainbow" },
+      { "nvim-treesitter/playground" },
+      { "windwp/nvim-ts-autotag" },
+      { "romgrk/nvim-treesitter-context" },
+      { "nvim-treesitter/nvim-treesitter-refactor" },
+      { "mizlan/iswap.nvim" }, -- Allows for swapping items etc. (:ISwap, :ISwapWith)
+      { "wellle/targets.vim" },
+    },
+  }
   -- use {'christianchiarulli/nvim-ts-rainbow'}
-  use "nvim-treesitter/playground"
-  use "windwp/nvim-ts-autotag"
-  use "romgrk/nvim-treesitter-context"
-  use "mizlan/iswap.nvim" -- Allows for swapping items etc. (:ISwap, :ISwapWith)
-
-  use "wellle/targets.vim"
 
   -- Git
   use "lewis6991/gitsigns.nvim"
-  use "f-person/git-blame.nvim"
-  use { "ruifm/gitlinker.nvim", requires = "nvim-lua/plenary.nvim" }
-  use "mattn/vim-gist"
-  use "mattn/webapi-vim"
-  use "https://github.com/rhysd/conflict-marker.vim" -- UI Component Library for Neovim.
-  -- Testing these:
+  use "f-person/git-blame.nvim" -- Do I still need this one? gitsigns and fugitive does similar things.
+  use { "ruifm/gitlinker.nvim", requires = "nvim-lua/plenary.nvim" } -- TODO: fix the regex for stash and github.pie
+  use "mattn/vim-gist" -- TODO: test this
+  use "mattn/webapi-vim" -- TODO: test this -- UI Component Library for Neovim.
+  use "https://github.com/rhysd/conflict-marker.vim" -- TODO: test this
+  -- NOTE: Testing these:
   use "kdheepak/lazygit.nvim"
   use {'Odie/gitabra', opt = true, cmd = {'Gitabra'} }
   -- should give this a try:
   -- use "akinsho/git-conflict.nvim"
-
-  -- DAP
-  use "mfussenegger/nvim-dap"
-  use "theHamsta/nvim-dap-virtual-text"
-  use "rcarriga/nvim-dap-ui"
-  use "Pocco81/dap-buddy.nvim"
-  -- use "Pocco81/DAPInstall.nvim"
-  -- experimental:
-  use "HiPhish/debugpy.nvim"
-  use { "rcarriga/vim-ultest",
-        requires = {"vim-test/vim-test"},
-        run = ":UpdateRemotePlugins" }
-
+  use { -- github interface for PRs
+    'pwntester/octo.nvim',
+    requires = {
+      'nvim-lua/plenary.nvim',
+      'nvim-telescope/telescope.nvim',
+      'kyazdani42/nvim-web-devicons',
+    },
+    config = function ()
+      require"octo".setup({
+        github_hostname = "github.pie.apple.com", -- GitHub Enterprise host,
+      })
+    end
+  }
 
   -- General QoL Plugins I'm testing:
+  use { "johmsalas/text-case.nvim",
+    config = function()
+      require('textcase').setup {}
+    end
+  }
   use "rafcamlet/nvim-luapad"
   use "ron89/thesaurus_query.vim"
   use "AndrewRadev/splitjoin.vim"
@@ -285,16 +346,12 @@ return packer.startup(function(use)
         require("bufresize").setup(opts)
     end,
   })
+  use {'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async'}
   use{ "anuvyklack/pretty-fold.nvim",
-   requires = 'anuvyklack/nvim-keymap-amend', -- only for preview
-   config = function()
-      require('pretty-fold').setup()
-      require('pretty-fold.preview').setup()
-   end
+    requires = 'anuvyklack/nvim-keymap-amend', -- only for preview
   }
   use {
     'bennypowers/nvim-regexplainer',
-    config = function() require'regexplainer'.setup() end,
     requires = {
       'nvim-treesitter/nvim-treesitter',
       'MunifTanjim/nui.nvim', }
@@ -317,10 +374,10 @@ return packer.startup(function(use)
       tag = "*",
       snippet_engine = "luasnip",
     }
-  use {
-    "luukvbaal/stabilize.nvim",
-    config = function() require("stabilize").setup({ nested = "QuickFixCmdPost,DiagnosticChanged *" }) end
-  }
+  -- use {
+  --   "luukvbaal/stabilize.nvim",
+  --   config = function() require("stabilize").setup({ nested = "QuickFixCmdPost,DiagnosticChanged *" }) end
+  -- }
 
   -- Testing Markdown stuff:
   use {"ellisonleao/glow.nvim", branch = 'main'}
@@ -335,17 +392,12 @@ return packer.startup(function(use)
 
   -- Should make neovim load files (and startup in general...) faster. Need to read on how to properly load this vvv
   -- use "nathom/filetype.nvim"
-  -- use {
-  --   "nathom/filetype.nvim",
-  --   config = function()
-  --     require("filetype").setup()
-  --   end,
-  -- }
   -- Had some annoying things with automatic session. Will give it another try when I have the time to mess around.
   -- remember the extension is also loaded in telescope.lua
   use { 'rmagatti/auto-session' }
   use { 'rmagatti/session-lens', requires = {'rmagatti/auto-session', 'nvim-telescope/telescope.nvim'} }
 
+  use { 'sindrets/diffview.nvim', requires = 'nvim-lua/plenary.nvim' , config = function() require("diffview").setup({}) end }
   -- OLD plugins here:
   use "AndrewRadev/linediff.vim"
   -- use "vim-scripts/kwbdi.vim"
@@ -366,6 +418,14 @@ return packer.startup(function(use)
   -- Show match number and index for searching
   -- use "vim-scripts/IndexedSearch" -- Adds 'Match XX of YY' in status-line when searching.
   use "MunifTanjim/nui.nvim" -- UI Component Library for Neovim.
+  use {
+    'm-demare/hlargs.nvim',
+    requires = { 'nvim-treesitter/nvim-treesitter' },
+    config = function()
+      require('hlargs').setup({})
+    end
+
+  }
   use {
     'kevinhwang91/nvim-hlslens',
     config = function()
