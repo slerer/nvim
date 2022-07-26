@@ -62,6 +62,11 @@ return packer.startup(function(use)
   use "tamago324/lir.nvim"
   -- use "kosayoda/nvim-lightbulb"
   use "akinsho/bufferline.nvim"
+  use { "SmiteshP/nvim-navic" }
+  -- use {
+  --   "SmiteshP/nvim-navic",
+  --   requires = "neovim/nvim-lspconfig"
+  -- }
   use "moll/vim-bbye"
   -- use "windwp/windline.nvim" -- giving lualine a chance...
   use "nvim-lualine/lualine.nvim"
@@ -193,6 +198,25 @@ return packer.startup(function(use)
   use "simrat39/symbols-outline.nvim"
   use "stevearc/aerial.nvim"
   --
+  use {
+    "zbirenbaum/neodim",
+    event = "LspAttach",
+    config = function ()
+      require("neodim").setup({
+        alpha = 0.75,
+        -- blend_color = "#000000",
+        update_in_insert = {
+          enable = false,
+          delay = 250,
+        },
+        hide = {
+          virtual_text = true,
+          signs = true,
+          underline = true,
+        }
+      })
+    end
+  }
   use({
     "glepnir/lspsaga.nvim",
     branch = "main",
@@ -342,8 +366,7 @@ return packer.startup(function(use)
   use({
     "kwkarlwang/bufresize.nvim",
     config = function()
-        local opts = { noremap=true, silent=true }
-        require("bufresize").setup(opts)
+        require("bufresize").setup()
     end,
   })
   use {'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async'}

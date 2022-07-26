@@ -10,7 +10,7 @@ lsp_installer.on_server_ready(function(server)
   -- setting the `opts` for invoking the server's setup at the end of this callback
   local opts = {
     flags = {
-      debounce_text_changes = 100,
+      debounce_text_changes = 150,
     },
     -- get the `on_attach` defined from `user.lsp.handlers` per server type
     on_attach = require("user.lsp.handlers").on_attach,

@@ -89,6 +89,7 @@ do
   })
 
   vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
+    group = group,
     callback = function()
       vim.cmd "set formatoptions+=c" -- Auto-wrap comments using textwidth, inserting the current comment leader automatically.
       vim.cmd "set formatoptions+=r" -- Automatically insert the current comment leader after hitting <Enter> in Insert mode.
@@ -99,14 +100,23 @@ do
     end,
   })
 
-  vim.api.nvim_create_autocmd({ "BufWritePost" }, {
-    pattern = { "*.py" },
-    callback = function()
-      vim.lsp.codelens.refresh()
-    end,
-  })
+  -- vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+  --   group = group,
+  --   pattern = { "*.py" },
+  --   callback = function()
+  --     vim.lsp.codelens.refresh()
+  --   end,
+  -- })
 
+  -- vim.api.nvim_create_autocmd({ "CursorMoved", "BufWinEnter", "BufFilePost", "InsertEnter", "BufWritePost" }, {
+  --   group = group,
+  --   callback = function()
+  --     require("user.winbar").get_winbar()
+  --   end,
+  -- })
   -- Set/unset relative number when entering/exiting a buffer.
+  -- vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "FocusGained" }, { command = [[ set winbar = "%{%v:lua.require('user.winbar').get_winbar()%}" ]], group = group })
+  -- vim.api.nvim_create_autocmd({ "BufLeave", "InsertEnter", "FocusLost" }, { command = "set winbar=%f", group = group })
   vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "FocusGained" }, { command = "set relativenumber", group = group })
   vim.api.nvim_create_autocmd({ "BufLeave", "InsertEnter", "FocusLost" }, { command = "set norelativenumber", group = group })
 end

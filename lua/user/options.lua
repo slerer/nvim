@@ -58,7 +58,8 @@ local options = {
   showbreak = "↪",                         -- string to put at the starting of wrapped lines
   list = true,                             -- show invisible characters like spaces enabled later via autocmd on certain filetypes
   pastetoggle = "<F2>",
-  -- winbar = "",
+  -- winbar = "%f",
+  winbar = "%{%v:lua.require'user.winbar'.get_winbar()%}"
 }
 
 for k, v in pairs(options) do

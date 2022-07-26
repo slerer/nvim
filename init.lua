@@ -1,8 +1,3 @@
--- local status_ok, filetype = pcall(require, "filetype")
--- if status_ok then
---   require("filetype").setup({})
--- end
-
 require "user.options"
 require "user.globals"
 require "user.utils"
@@ -49,7 +44,7 @@ require "user.gist"
 require "user.gitlinker"
 require "user.auto-session"
 require "user.notify"
-require "user.ts-context"
+require "user.ts-context" -- trying to use the winbar option instead.
 require "user.registers"
 require "user.telescope-file-browser"
 require "user.sniprun"
@@ -65,3 +60,5 @@ require "user.trouble"
 require "user.pretty-fold"
 require "user.regexplainer"
 require "user.nvim-ufo"
+require "user.navic"
+require "user.winbar"

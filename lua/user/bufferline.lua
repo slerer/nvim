@@ -6,6 +6,7 @@ end
 
 bufferline.setup {
   options = {
+    mode = "buffers", -- set to "tabs" to only show tabpages instead
     numbers = "none", --  "none" | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
     close_command = "bd %d", -- can be a string | function, see "Mouse actions"
     right_mouse_command = "bd %d", -- can be a string | function, see "Mouse actions"
@@ -33,7 +34,7 @@ bufferline.setup {
     --     return vim.fn.fnamemodify(buf.name, ':t:r')
     --   end
     -- end,
-    max_name_length = 30,
+    max_name_length = 40,
     max_prefix_length = 30, -- prefix used when a buffer is de-duplicated
     tab_size = 21,
     diagnostics = false, -- | "nvim_lsp" | "coc",
@@ -57,7 +58,17 @@ bufferline.setup {
     --     return true
     --   end
     -- end,
-    offsets = { { filetype = "NvimTree", text = "", padding = 0 } },
+    offsets = {
+      {
+        filetype = "NvimTree",
+        text = function()
+          return vim.fn.getcwd()
+        end,
+        highlight = "Directory",
+        text_align = "left"
+      }
+    },
+    -- offsets = { { filetype = "NvimTree", text = "", padding = 0 } },
     show_buffer_icons = true,
     show_buffer_close_icons = true,
     show_close_icon = true,
@@ -65,7 +76,7 @@ bufferline.setup {
     persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
     -- can also be a table containing 2 custom separators
     -- [focused and unfocused]. eg: { '|', '|' }
-    separator_style = "thin", -- | "thick" | "thin" | { 'any', 'any' },
+    separator_style = "padded_slant", -- "slant" | "thick" | "thin" | { 'any', 'any' },
     enforce_regular_tabs = true,
     always_show_bufferline = true,
     sort_by = 'id' -- | 'extension' | 'relative_directory' | 'directory' | 'tabs' | function(buffer_a, buffer_b)
@@ -82,7 +93,6 @@ bufferline.setup {
       guifg = { attribute = "fg", highlight = "TabLine" },
       guibg = { attribute = "bg", highlight = "TabLine" },
     },
-
     -- buffer_selected = {
     --   guifg = {attribute='fg',highlight='#ff0000'},
     --   guibg = {attribute='bg',highlight='#0000ff'},
@@ -105,7 +115,6 @@ bufferline.setup {
     --   guifg = {attribute='fg',highlight='TabLineSel'},
     --   guibg ={attribute='bg',highlight='TabLineSel'}
     --   },
-
     tab_selected = {
       guifg = { attribute = "fg", highlight = "Normal" },
       guibg = { attribute = "bg", highlight = "Normal" },
@@ -119,7 +128,6 @@ bufferline.setup {
       guifg = { attribute = "fg", highlight = "TabLineSel" },
       guibg = { attribute = "bg", highlight = "Normal" },
     },
-
     duplicate_selected = {
       guifg = { attribute = "fg", highlight = "TabLineSel" },
       guibg = { attribute = "bg", highlight = "TabLineSel" },
@@ -135,7 +143,6 @@ bufferline.setup {
       guibg = { attribute = "bg", highlight = "TabLine" },
       gui = "italic",
     },
-
     modified = {
       guifg = { attribute = "fg", highlight = "TabLine" },
       guibg = { attribute = "bg", highlight = "TabLine" },
@@ -148,7 +155,6 @@ bufferline.setup {
       guifg = { attribute = "fg", highlight = "TabLine" },
       guibg = { attribute = "bg", highlight = "TabLine" },
     },
-
     separator = {
       guifg = { attribute = "bg", highlight = "TabLine" },
       guibg = { attribute = "bg", highlight = "TabLine" },

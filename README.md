@@ -9,13 +9,13 @@ brew install scdoc
 ```
 
 Clone the repo:
-```
+```sh
 git clone https://github.com/lucc/nvimpager.git
 cd nvimpager
 make PREFIX=$HOME/.local install
 ```
 Then add to your `~/.zshrc`:
-```
+```sh
 if [[ "$(command -v nvim)" ]]; then
     export EDITOR='nvim'
     export SUDO_EDITOR=nvim
@@ -36,8 +36,6 @@ Run `nvim` and wait for the plugins to be installed
 
 **NOTE** (You will notice treesitter pulling in a bunch of parsers the next time you open Neovim) 
 
-
-each video will be associated with a branch so checkout the one you are interested in
 
 ## Get healthy
 
@@ -77,7 +75,7 @@ Next we need to install python support (node is optional)
   conda activate neovim
   pip install pynvim
   ```
-  Then update the value of `vim.g.python3_host_prog` in `~/.config/nvim/lua/user/options.lua+`.
+  Then update the value of `vim.g.python3_host_prog` in `~/.config/nvim/lua/user/options.lua`.
 
 - Neovim node support
 

@@ -21,7 +21,7 @@ M.setup = function()
     signs = {
       active = signs,
     },
-    update_in_insert = true, -- TODO: changed this to 'false' to try and speed things up...
+    update_in_insert = false, -- TODO: changed this to 'false' to try and speed things up...
     underline = true,
     severity_sort = true,
     float = {
@@ -108,6 +108,13 @@ M.on_attach = function(client, bufnr)
   -- update Aerial tree
   if aerial_ok then
     aerial.on_attach(client, bufnr)
+  end
+  -- nvim-navic
+  if client.server_capabilities.documentSymbolProvider then
+    local navic_status, navic =  pcall(require, "nvim-navic")
+    if navic_status then
+      navic.attach(client, bufnr)
+    end
   end
 end
 

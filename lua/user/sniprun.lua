@@ -5,8 +5,9 @@ if not status_ok then
 end
 
 sniprun.setup {
-  -- selected_interpreters = {}, --# use those instead of the default for the current filetype
+  selected_interpreters = {'Python3_fifo'}, --# use those instead of the default for the current filetype
   -- repl_enable = { "Python3_original" }, --# enable REPL-like behavior for the given interpreters
+  repl_enable = { "Python3_fifo" }, --# enable REPL-like behavior for the given interpreters
   -- repl_disable = {}, --# disable REPL-like behavior for the given interpreters
 
   -- interpreter_options = { --# intepreter-specific options, see docs / :SnipInfo <name>
@@ -18,7 +19,7 @@ sniprun.setup {
 
   --# you can combo different display modes as desired
   display = {
-    -- "Classic", --# display results in the command-line  area
+    "Classic", --# display results in the command-line  area
     "VirtualTextOk", --# display ok results as virtual text (multiline is shortened)
     -- "VirtualTextErr", --# display error results as virtual text
     -- "TempFloatingWindow",      --# display results in a floating window
@@ -37,8 +38,8 @@ sniprun.setup {
   --# You can use the same keys to customize whether a sniprun producing
   --# no output should display nothing or '(no output)'
   show_no_output = {
-    "Classic",
-    "TempFloatingWindow", --# implies LongTempFloatingWindow, which has no effect on its own
+    -- "Classic",
+    -- "TempFloatingWindow", --# implies LongTempFloatingWindow, which has no effect on its own
   },
 
   --# customize highlight groups (setting this overrides colorscheme)

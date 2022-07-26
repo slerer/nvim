@@ -306,8 +306,8 @@ local mappings = {
 
   r = {
     name = "Replace",
-    -- n = { "<cmd>lua require('nvim-treesitter-refactor.smart_rename').smart_rename()", "Rename (treesitter-refactor)" },
-    r = { "<cmd>lua require('spectre').open()<cr>", "Replace" },
+    n = { "<cmd>lua require('nvim-treesitter-refactor.smart_rename').smart_rename()<cr>", "Rename (treesitter-refactor)" },
+    -- r = { "<cmd>lua require('spectre').open()<cr>", "Replace" },
     w = { "<cmd>lua require('spectre').open_visual({select_word=true})<cr>", "Replace Word" },
     f = { "<cmd>lua require('spectre').open_file_search()<cr>", "Replace Buffer" },
   },
@@ -405,7 +405,7 @@ local m_mappings = {
   },
 }
 
-vim.keymap.set("n", "<leader>rn", function() return ":IncRename " .. vim.fn.expand("<cword>") end, { expr = true , desc = 'Incremental Rename'})
+vim.keymap.set("n", "<leader>rr", function() return ":IncRename " .. vim.fn.expand("<cword>") end, { expr = true , desc = 'Incremental Rename'})
 which_key.setup(setup)
 which_key.register(mappings, opts)
 which_key.register(vmappings, vopts)

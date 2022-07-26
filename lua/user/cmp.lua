@@ -114,7 +114,7 @@ cmp.setup {
     }),
   },
   formatting = {
-    fields = { "kind", "abbr", "menu" },
+    fields = { "abbr", "kind", "menu" },
     format = function(entry, vim_item)
       -- Kind icons
       -- vim_item.kind = string.format("%s", kind_icons[vim_item.kind])
@@ -128,7 +128,7 @@ cmp.setup {
         path = "[PATH]",
         buffer = "[BUFFER]",
         spell = "[ABC]",
-        omni = "[OMNI]",
+        -- omni = "[OMNI]",
         emoji = "[EMOJI]",
         git = "[GIT]",
       })[entry.source.name]
@@ -138,15 +138,18 @@ cmp.setup {
   sources = {
     { name = 'dap' },
     { name = "nvim_lua", keyword_length = 3 },
-    { name = "nvim_lsp", keyword_length = 3 },
+    { name = "nvim_lsp", keyword_length = 1 },
     { name = "nvim_lsp_signature_help" },
-    { name = "luasnip", keyword_length = 2 },
+    { name = "luasnip", keyword_length = 1 },
     { name = "path" },
-    { name = "buffer", keyword_length = 3 },
-    { name = "spell", keyword_length = 2 },
-    { name = "omni" },
+    { name = "buffer", keyword_length = 4 },
+    { name = "spell", keyword_length = 1 },
+    -- { name = "omni" },
     { name = "emoji" },
     { name = "git" },
+  },
+  flags = {
+    debounce_text_changes = 150,
   },
   confirm_opts = {
     behavior = cmp.ConfirmBehavior.Replace,
